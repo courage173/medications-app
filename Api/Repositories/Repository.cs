@@ -10,40 +10,35 @@ namespace Api.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly ApplicationDbContext _context;
 
         public Repository(ApplicationDbContext context)
         {
             _context = context;
-            _dbSet = _context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll() => _dbSet.ToList();
+        public IEnumerable<T> GetAll() => _context.Set<T>().ToList();
 
-        public T GetById(int id)
-        {
-            return _dbSet.Find(id) ?? throw new Exception("Entity not found");
-        }
+        public T GetById(int id) => _context.Set<T>().Find(id);
 
         public void Add(T entity)
         {
-            _dbSet.Add(entity);
+            _context.Set<T>().Add(entity);
             _context.SaveChanges();
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            _context.Set<T>().Update(entity);
             _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            var entity = _dbSet.Find(id);
+            var entity = _context.Set<T>().Find(id);
             if (entity != null)
             {
-                _dbSet.Remove(entity);
+                _context.Set<T>().Remove(entity);
                 _context.SaveChanges();
             }
         }

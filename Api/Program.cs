@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
+using Api.Repositories;
+using Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
+builder.Services.AddScoped<MedicationRepository>();
+builder.Services.AddScoped<ClassificationRepository>();
+builder.Services.AddScoped<MedicationActiveIngredientsRepository>();
+builder.Services.AddScoped<PharmaceuticalFormRepository>();
+builder.Services.AddScoped<TherapeuticClassRepository>();
+
+builder.Services.AddScoped<MedicationService>();
+builder.Services.AddScoped<ClassificationService>();
+builder.Services.AddScoped<MedicationActiveIngredientsService>();
+builder.Services.AddScoped<PharmaceuticalFormService>();
+builder.Services.AddScoped<TherapeuticClassService>();
 
 var app = builder.Build();
 

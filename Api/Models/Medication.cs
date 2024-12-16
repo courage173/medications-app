@@ -1,6 +1,6 @@
 using Api.Models;
 
-namespace MedicationApp.Models
+namespace Api.Models
 {
     public class Medication
     {
