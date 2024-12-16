@@ -20,6 +20,9 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetAll() => Ok(_service.GetAllMedications());
 
+        [HttpGet("{id}")]
+        public IActionResult Get(int id) => Ok(_service.GetMedication(id));
+
         [HttpPost]
         public IActionResult Create([FromBody] Medication medication)
         {
@@ -27,6 +30,18 @@ namespace Api.Controllers
             return Ok();
         }
 
-        // Add other endpoints similarly
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Medication medication)
+        {
+            _service.UpdateMedication(id, medication.Name, medication.CompetentAuthorityStatus, medication.InternalStatus, medication.Unit, medication.PharmaceuticalFormId, medication.ATCCodeId, medication.TherapeuticClassId, medication.ClassificationId);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _service.DeleteMedication(id);
+            return Ok();
+        }
     }
 }

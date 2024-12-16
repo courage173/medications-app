@@ -38,14 +38,16 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Classification classification)
+        public IActionResult Update(int id, Classification data)
         {
+            var classification = _service.GetClassification(id);
+
             if (id != classification.Id)
             {
                 return BadRequest();
             }
 
-            _service.UpdateClassification(id, classification.Name);
+            _service.UpdateClassification(id, data.Name);
             return NoContent();
         }
 
