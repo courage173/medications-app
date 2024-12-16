@@ -13,7 +13,7 @@ namespace Api.Models
         public ICollection<ActiveIngredient> MedicationActiveIngredients { get; private set; } = new List<ActiveIngredient>();
 
 
-        public ActiveIngredient(string name, string atcCode)
+        public ActiveIngredient(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }

@@ -43,8 +43,13 @@ namespace Api.Data
 
             modelBuilder.Entity<Medication>()
                 .HasMany(m => m.MedicationActiveIngredients)
-                .WithOne()
+                .WithOne(mai => mai.Medication)
                 .HasForeignKey(mai => mai.MedicationId);
+
+            modelBuilder.Entity<MedicationActiveIngredients>()
+                   .HasOne(mai => mai.ActiveIngredient)
+                   .WithMany()
+                   .HasForeignKey(mai => mai.ActiveIngredientId);
         }
     }
 }
