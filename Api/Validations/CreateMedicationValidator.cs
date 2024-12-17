@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Api.Validations
 {
-    public class CreateMedicationValidator : AbstractValidator<CreateMedicationDto>
+    public class CreateMedicationValidator : AbstractValidator<MedicationRecordDTO>
     {
         public CreateMedicationValidator()
         {

@@ -9,5 +9,14 @@ namespace Api.DTOs
     {
         public int Id { get; set; }
         public required string Name { get; set; }
+
+        public static ClassificationDto FromClassification(Api.Models.Classification classification)
+        {
+            return new ClassificationDto
+            {
+                Id = classification.Id,
+                Name = classification.Name
+            };
+        }
     }
 }

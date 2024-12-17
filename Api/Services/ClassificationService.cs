@@ -11,33 +11,21 @@ namespace Api.Services
     {
 
         private readonly IClassificationRepository _repository;
-        private readonly IMapper _mapper;
 
-        public ClassificationService(IMapper mapper, ClassificationRepository repository)
+        public ClassificationService(IClassificationRepository repository)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
-        public IEnumerable<ClassificationDto> GetAllClassifications()
-        {
-            var classifications = _repository.GetAll();
-            var classificationRecords = _mapper.Map<IEnumerable<ClassificationDto>>(classifications);
-            return classificationRecords;
-        }
+        public IEnumerable<ClassificationDto> GetAllClassifications() => _repository.GetAll().Select(ClassificationDto.FromClassification);
 
-        public ClassificationDto GetClassification(int id)
-        {
-            var classification = _repository.GetById(id);
+        public ClassificationDto GetClassification(int id) => ClassificationDto.FromClassification(_repository.GetById(id));
 
-            var classificationRecord = _mapper.Map<ClassificationDto>(classification);
-            return classificationRecord;
-        }
-
-        public void AddClassification(ClassificationDto classification)
+        public ClassificationDto AddClassification(string name)
         {
-            var newClassification = _mapper.Map<Classification>(classification);
-            _repository.Add(newClassification);
+            var newClassification = new Classification(name);
+            var classification = _repository.Add(newClassification);
+            return ClassificationDto.FromClassification(classification);
         }
 
         public void UpdateClassification(int id, string name)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Api.Services;
+using Api.DTOs;
 
 namespace Api.Controllers
 {
@@ -17,10 +17,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Classification> GetAll() => _service.GetAllClassifications();
+        public IEnumerable<ClassificationDto> GetAll() => _service.GetAllClassifications();
 
         [HttpGet("{id}")]
-        public ActionResult<Classification> GetById(int id)
+        public ActionResult<ClassificationDto> GetById(int id)
         {
             var classification = _service.GetClassification(id);
             if (classification == null)
@@ -31,14 +31,13 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Classification> Create(Classification classification)
+        public ActionResult<ClassificationDto> Create(CreateAndUpdateClassificationDto classification)
         {
-            _service.AddClassification(classification);
-            return CreatedAtAction(nameof(GetById), new { id = classification.Id }, classification);
+            return _service.AddClassification(classification.Name);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Classification data)
+        public IActionResult Update(int id, ClassificationDto data)
         {
             var classification = _service.GetClassification(id);
 

@@ -21,10 +21,11 @@ namespace Api.Repositories
 
         public T GetById(int id) => _context.Set<T>().Find(id);
 
-        public void Add(T entity)
+        public T Add(T entity)
         {
             _context.Set<T>().Add(entity);
             _context.SaveChanges();
+            return entity;
         }
 
         public void Update(T entity)

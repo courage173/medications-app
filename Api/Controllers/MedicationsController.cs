@@ -25,14 +25,14 @@ namespace Api.Controllers
         public IActionResult Get(int id) => Ok(_service.GetMedication(id));
 
         [HttpPost]
-        public IActionResult Create([FromBody] Medication medication)
+        public IActionResult Create([FromBody] MedicationRecordDTO medication)
         {
             _service.AddMedication(medication);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CreateMedicationDto medication)
+        public IActionResult Update(int id, [FromBody] MedicationRecordDTO medication)
         {
             _service.UpdateMedication(id, medication);
             return Ok();

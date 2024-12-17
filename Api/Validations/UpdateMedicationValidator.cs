@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Api.Validations
 {
-    public class UpdateMedicationValidator : AbstractValidator<UpdateMedicationDto>
+    public class UpdateMedicationValidator : AbstractValidator<MedicationRecordDTO>
     {
 
         // Add the validation logic here

@@ -9,32 +9,20 @@ namespace Api.Services
     public class MedicationService
     {
         private readonly IMedicationRepository _medicationRepository;
-        private readonly IMapper _mapper;
 
-        public MedicationService(IMapper mapper, IMedicationRepository repository)
+        public MedicationService(IMedicationRepository repository)
         {
             _medicationRepository = repository;
-            _mapper = mapper;
+
         }
 
-        public IEnumerable<MedicationRecordDTO> GetAllMedications()
-        {
-            var medications = _medicationRepository.GetAll();
-            var medicationRecords = _mapper.Map<IEnumerable<MedicationRecordDTO>>(medications);
-            return medicationRecords;
-        }
+        public IEnumerable<MedicationRecordDTO> GetAllMedications() => _medicationRepository.GetAll().Select(MedicationRecordDTO.FromMedication);
 
-        public MedicationRecordDTO GetMedication(int id)
-        {
-            var medication = _medicationRepository.GetById(id);
+        public MedicationRecordDTO GetMedication(int id) => MedicationRecordDTO.FromMedication(_medicationRepository.GetById(id));
 
-            var medicationRecord = _mapper.Map<MedicationRecordDTO>(medication);
-            return medicationRecord;
-        }
-
-        public void AddMedication(MedicationRecordDTO medication)
+        public void AddMedication(MedicationRecordDTO medicationDto)
         {
-            var newMedication = _mapper.Map<Medication>(medication);
+            var newMedication = new Medication(medicationDto);
             _medicationRepository.Add(newMedication);
         }
 
@@ -50,11 +38,7 @@ namespace Api.Services
 
         public void DeleteMedication(int id) => _medicationRepository.Delete(id);
 
-        public IEnumerable<MedicationRecordDTO> GetMedicationsByTherapeuticClass(int therapeuticClassId)
-        {
-            var medications = _medicationRepository.GetMedicationsByTherapeuticClass(therapeuticClassId);
-            var medicationRecords = _mapper.Map<IEnumerable<MedicationRecordDTO>>(medications);
-            return medicationRecords;
-        }
+        public IEnumerable<MedicationRecordDTO> GetMedicationsByTherapeuticClass(int therapeuticClassId) => _medicationRepository.GetMedicationsByTherapeuticClass(therapeuticClassId).Select(MedicationRecordDTO.FromMedication);
+
     }
 }
