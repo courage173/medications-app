@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.DTOs
 {
-    public class CreateUpdateTherapeuticClassRepository
+    public class CreateUpdateTherapeuticClassDto
     {
         public required string Name { get; set; }
     }

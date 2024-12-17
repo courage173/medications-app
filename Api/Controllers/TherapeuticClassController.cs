@@ -31,14 +31,22 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TherapeuticClassDto> Create(CreateUpdateTherapeuticClassRepository item)
+        public ActionResult<TherapeuticClassDto> Create([FromBody] CreateUpdateTherapeuticClassDto item)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return _service.AddTherapeuticClass(item.Name);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CreateUpdateTherapeuticClassRepository item)
+        public IActionResult Update(int id, [FromBody] CreateUpdateTherapeuticClassDto item)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var therapeuticClass = _service.GetTherapeuticClass(id);
 
             if (therapeuticClass == null)

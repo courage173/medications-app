@@ -27,7 +27,7 @@ namespace Api.Models
 
         private Medication() { }
 
-        public Medication(MedicationRecordDTO medicationRecord)
+        public Medication(CreateUpdateMedicationRecordDto medicationRecord)
         {
 
             Name = medicationRecord.Name;
@@ -41,7 +41,7 @@ namespace Api.Models
 
         }
 
-        public void UpdateMedication(MedicationRecordDTO medicationRecord)
+        public void UpdateMedication(CreateUpdateMedicationRecordDto medicationRecord)
         {
             Name = medicationRecord.Name;
             CompetentAuthorityStatus = medicationRecord.CompetentAuthorityStatus;

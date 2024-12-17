@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Api.Validations
 {
-    public class CreateMedicationValidator : AbstractValidator<MedicationRecordDTO>
+    public class CreateUpdateMedicationValidator : AbstractValidator<MedicationRecordDTO>
     {
-        public CreateMedicationValidator()
+        public CreateUpdateMedicationValidator()
         {
             RuleFor(m => m.Name).NotEmpty().WithMessage("Name is required.");
             RuleFor(m => m.CompetentAuthorityStatus).NotEmpty().WithMessage("Competent Authority Status is required.");

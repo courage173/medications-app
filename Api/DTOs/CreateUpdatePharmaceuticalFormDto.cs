@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.DTOs
 {
-    public class CreateUpdatePharmaceuticalForm
+    public class CreateUpdatePharmaceuticalFormDto
     {
         public required string Form { get; set; }
     }

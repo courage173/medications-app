@@ -31,14 +31,23 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ClassificationDto> Create(CreateAndUpdateClassificationDto classification)
+        public ActionResult<ClassificationDto> Create([FromBody] CreateAndUpdateClassificationDto classification)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return _service.AddClassification(classification.Name);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, ClassificationDto data)
+        public IActionResult Update(int id, [FromBody] ClassificationDto data)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var classification = _service.GetClassification(id);
 
             if (id != classification.Id)

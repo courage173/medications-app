@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MedicationsController : ControllerBase
     {
         private readonly MedicationService _service;
@@ -21,15 +23,24 @@ namespace Api.Controllers
         public IActionResult Get(int id) => Ok(_service.GetMedication(id));
 
         [HttpPost]
-        public IActionResult Create([FromBody] MedicationRecordDTO medication)
+        public IActionResult Create([FromBody] CreateUpdateMedicationRecordDto medication)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             _service.AddMedication(medication);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] MedicationRecordDTO medication)
+        public IActionResult Update(int id, [FromBody] CreateUpdateMedicationRecordDto medication)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _service.UpdateMedication(id, medication);
             return Ok();
         }

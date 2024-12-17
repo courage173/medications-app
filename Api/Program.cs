@@ -3,7 +3,9 @@ using Api.Data;
 using Api.Repositories;
 using Api.Services;
 using Api.Interfaces;
-
+using Api.Validations;
+using FluentValidation;
+using Api.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,12 @@ builder.Services.AddScoped<ClassificationService>();
 builder.Services.AddScoped<MedicationActiveIngredientsService>();
 builder.Services.AddScoped<PharmaceuticalFormService>();
 builder.Services.AddScoped<TherapeuticClassService>();
+
+builder.Services.AddScoped<IValidator<MedicationRecordDTO>, CreateUpdateMedicationValidator>();
+builder.Services.AddScoped<IValidator<CreateAndUpdateClassificationDto>, CreateUpdateClassificationValidator>();
+builder.Services.AddScoped<IValidator<CreateUpdatePharmaceuticalFormDto>, CreateUpdatePharmaceuticalFormValidator>();
+builder.Services.AddScoped<IValidator<CreateUpdateTherapeuticClassDto>, CreateUpdateTherapeuticValidator>();
+
 
 
 var app = builder.Build();

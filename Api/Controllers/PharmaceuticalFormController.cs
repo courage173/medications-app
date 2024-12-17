@@ -31,14 +31,22 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PharmaceuticalFormDto> Create(CreateUpdatePharmaceuticalForm item)
+        public ActionResult<PharmaceuticalFormDto> Create([FromBody] CreateUpdatePharmaceuticalFormDto item)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return _service.AddPharmaceuticalForm(item.Form);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CreateUpdatePharmaceuticalForm item)
+        public IActionResult Update(int id, [FromBody] CreateUpdatePharmaceuticalFormDto item)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var pharmaceuticalForm = _service.GetPharmaceuticalForm(id);
 
             if (pharmaceuticalForm == null)

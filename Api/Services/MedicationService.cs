@@ -19,13 +19,13 @@ namespace Api.Services
 
         public MedicationRecordDTO GetMedication(int id) => MedicationRecordDTO.FromMedication(_medicationRepository.GetById(id));
 
-        public void AddMedication(MedicationRecordDTO medicationDto)
+        public void AddMedication(CreateUpdateMedicationRecordDto medicationDto)
         {
             var newMedication = new Medication(medicationDto);
             _medicationRepository.Add(newMedication);
         }
 
-        public void UpdateMedication(int id, MedicationRecordDTO updateMedication)
+        public void UpdateMedication(int id, CreateUpdateMedicationRecordDto updateMedication)
         {
             var medication = _medicationRepository.GetById(id);
             if (medication != null)
