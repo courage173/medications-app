@@ -5,10 +5,10 @@ namespace Api.DTOs
     public record MedicationRecordDTO
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string CompetentAuthorityStatus { get; set; }
-        public required string InternalStatus { get; set; }
-        public required string Unit { get; set; }
+        public string? Name { get; set; }
+        public string? CompetentAuthorityStatus { get; set; }
+        public string? InternalStatus { get; set; }
+        public string? Unit { get; set; }
         public int PharmaceuticalFormId { get; set; }
         public int ATCCodeId { get; set; }
         public int TherapeuticClassId { get; set; }

@@ -1,6 +1,7 @@
 using Api.Data;
 using Api.Interfaces;
 using Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories
 {
@@ -13,7 +14,7 @@ namespace Api.Repositories
 
         public IEnumerable<Medication> GetMedicationsByTherapeuticClass(int therapeuticClassId)
         {
-            return _context.Medications.Where(m => m.TherapeuticClassId == therapeuticClassId).ToList();
+            return _context.Medications.Where(m => m.TherapeuticClassId == therapeuticClassId).Include(m => m.ATCCodeId).ThenInclude(m => m).ToList();
         }
     }
 }

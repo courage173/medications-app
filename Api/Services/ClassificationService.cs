@@ -2,6 +2,7 @@
 using Api.DTOs;
 using Api.Interfaces;
 using Api.Models;
+using System.Linq;
 
 namespace Api.Services
 {
@@ -15,27 +16,35 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public IEnumerable<ClassificationDto> GetAllClassifications() => _repository.GetAll().Select(ClassificationDto.FromClassification);
+        public async Task<List<ClassificationDto>> GetAllClassificationsAsync()
+        {
+            var classifications = await _repository.GetAllAsync();
+            return classifications.Select(ClassificationDto.FromClassification).ToList();
+        }
 
-        public ClassificationDto GetClassification(int id) => ClassificationDto.FromClassification(_repository.GetById(id));
+        public async Task<ClassificationDto> GetClassificationAsync(int id)
+        {
+            var classification = await _repository.GetByIdAsync(id);
+            return ClassificationDto.FromClassification(classification!);
+        }
 
-        public ClassificationDto AddClassification(string name)
+        public async Task<ClassificationDto> AddClassificationAsync(string name)
         {
             var newClassification = new Classification(name);
-            var classification = _repository.Add(newClassification);
+            var classification = await _repository.AddAsync(newClassification);
             return ClassificationDto.FromClassification(classification);
         }
 
-        public void UpdateClassification(int id, string name)
+        public async Task UpdateClassificationAsync(int id, string name)
         {
-            var classification = _repository.GetById(id);
+            var classification = await _repository.GetByIdAsync(id);
             if (classification != null)
             {
                 classification.UpdateClassification(name);
-                _repository.Update(classification);
+                await _repository.UpdateAsync(classification);
             }
         }
 
-        public void DeleteClassification(int id) => _repository.Delete(id);
+        public async Task DeleteClassificationAsync(int id) => await _repository.DeleteAsync(id);
     }
 }

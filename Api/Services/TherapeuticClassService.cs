@@ -14,27 +14,35 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public IEnumerable<TherapeuticClassDto> GetAllTherapeuticClasses() => _repository.GetAll().Select(TherapeuticClassDto.FromTherapeuticClass);
+        public async Task<IEnumerable<TherapeuticClassDto>> GetAllTherapeuticClasses()
+        {
+            var therapeuticClasses = await _repository.GetAllAsync();
+            return therapeuticClasses.Select(TherapeuticClassDto.FromTherapeuticClass);
+        }
 
-        public TherapeuticClassDto GetTherapeuticClass(int id) => TherapeuticClassDto.FromTherapeuticClass(_repository.GetById(id));
+        public async Task<TherapeuticClassDto> GetTherapeuticClass(int id)
+        {
+            var therapeuticClass = await _repository.GetByIdAsync(id);
+            return TherapeuticClassDto.FromTherapeuticClass(therapeuticClass!);
+        }
 
-        public TherapeuticClassDto AddTherapeuticClass(string name)
+        public async Task<TherapeuticClassDto> AddTherapeuticClass(string name)
         {
             var therapeuticClass = new TherapeuticClass(name);
-            var response = _repository.Add(therapeuticClass);
+            var response = await _repository.AddAsync(therapeuticClass);
             return TherapeuticClassDto.FromTherapeuticClass(response);
         }
 
-        public void UpdateTherapeuticClass(int id, string name)
+        public async Task UpdateTherapeuticClass(int id, string name)
         {
-            var item = _repository.GetById(id);
+            var item = await _repository.GetByIdAsync(id);
             if (item != null)
             {
                 item = new TherapeuticClass(name);
-                _repository.Update(item);
+                await _repository.UpdateAsync(item);
             }
         }
 
-        public void DeleteTherapeuticClass(int id) => _repository.Delete(id);
+        public async Task DeleteTherapeuticClass(int id) => await _repository.DeleteAsync(id);
     }
 }

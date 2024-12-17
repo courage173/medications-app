@@ -17,38 +17,38 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_service.GetAllMedications());
+        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllMedications());
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id) => Ok(_service.GetMedication(id));
+        public async Task<IActionResult> Get(int id) => Ok(await _service.GetMedication(id));
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateUpdateMedicationRecordDto medication)
+        public async Task<IActionResult> Create([FromBody] CreateUpdateMedicationRecordDto medication)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            _service.AddMedication(medication);
+            await _service.AddMedication(medication);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CreateUpdateMedicationRecordDto medication)
+        public async Task<IActionResult> Update(int id, [FromBody] CreateUpdateMedicationRecordDto medication)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _service.UpdateMedication(id, medication);
+            await _service.UpdateMedication(id, medication);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _service.DeleteMedication(id);
+            await _service.DeleteMedication(id);
             return Ok();
         }
     }

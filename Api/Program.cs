@@ -5,7 +5,9 @@ using Api.Services;
 using Api.Interfaces;
 using Api.Validations;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Api.DTOs;
+using Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 builder.Services.AddSwaggerGen();
 
@@ -37,12 +41,6 @@ builder.Services.AddScoped<MedicationActiveIngredientsService>();
 builder.Services.AddScoped<PharmaceuticalFormService>();
 builder.Services.AddScoped<TherapeuticClassService>();
 
-builder.Services.AddScoped<IValidator<MedicationRecordDTO>, CreateUpdateMedicationValidator>();
-builder.Services.AddScoped<IValidator<CreateAndUpdateClassificationDto>, CreateUpdateClassificationValidator>();
-builder.Services.AddScoped<IValidator<CreateUpdatePharmaceuticalFormDto>, CreateUpdatePharmaceuticalFormValidator>();
-builder.Services.AddScoped<IValidator<CreateUpdateTherapeuticClassDto>, CreateUpdateTherapeuticValidator>();
-
-
 
 var app = builder.Build();
 
@@ -54,7 +52,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
+
 app.MapControllers();
 
 app.Run();

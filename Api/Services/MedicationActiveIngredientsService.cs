@@ -14,28 +14,36 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public IEnumerable<MedicationActiveIngredientsResponseDto> GetAllMedicationActiveIngredients() => _repository.GetAll().Select(MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients);
+        public async Task<IEnumerable<MedicationActiveIngredientsResponseDto>> GetAllMedicationActiveIngredients()
+        {
+            var result = await _repository.GetAllAsync();
+            return result.Select(MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients);
+        }
 
-        public MedicationActiveIngredientsResponseDto GetMedicationActiveIngredient(int id) => MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients(_repository.GetById(id));
+        public async Task<MedicationActiveIngredientsResponseDto> GetMedicationActiveIngredient(int id)
+        {
+            var result = await _repository.GetByIdAsync(id);
+            return MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients(result!);
+        }
 
-        public MedicationActiveIngredientsResponseDto AddMedicationActiveIngredient(CreateUpdateMedicationActiveIngredientsDto data)
+        public async Task<MedicationActiveIngredientsResponseDto> AddMedicationActiveIngredient(CreateUpdateMedicationActiveIngredientsDto data)
         {
             var newMedicationActiveIngredients = new MedicationActiveIngredients(data);
-            var response = _repository.Add(newMedicationActiveIngredients);
+            var response = await _repository.AddAsync(newMedicationActiveIngredients);
 
             return MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients(response);
         }
 
-        public void UpdateMedicationActiveIngredient(int id, CreateUpdateMedicationActiveIngredientsDto data)
+        public async Task UpdateMedicationActiveIngredient(int id, CreateUpdateMedicationActiveIngredientsDto data)
         {
-            var item = _repository.GetById(id);
+            var item = await _repository.GetByIdAsync(id);
             if (item != null)
             {
                 item = new MedicationActiveIngredients(data);
-                _repository.Update(item);
+                await _repository.UpdateAsync(item);
             }
         }
 
-        public void DeleteMedicationActiveIngredient(int id) => _repository.Delete(id);
+        public async Task DeleteMedicationActiveIngredient(int id) => await _repository.DeleteAsync(id);
     }
 }

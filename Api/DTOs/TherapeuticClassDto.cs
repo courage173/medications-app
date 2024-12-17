@@ -8,7 +8,7 @@ namespace Api.DTOs
     public class TherapeuticClassDto
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
+        public string? Name { get; set; }
 
         public static TherapeuticClassDto FromTherapeuticClass(Api.Models.TherapeuticClass therapeuticClass)
         {

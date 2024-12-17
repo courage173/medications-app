@@ -7,6 +7,6 @@ namespace Api.DTOs
 {
     public class CreateUpdatePharmaceuticalFormDto
     {
-        public required string Form { get; set; }
+        public string? Form { get; set; }
     }
 }

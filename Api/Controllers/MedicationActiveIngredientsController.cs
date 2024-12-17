@@ -17,12 +17,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<MedicationActiveIngredientsResponseDto> GetAll() => _service.GetAllMedicationActiveIngredients();
+        public async Task<IEnumerable<MedicationActiveIngredientsResponseDto>> GetAll() => await _service.GetAllMedicationActiveIngredients();
 
         [HttpGet("{id}")]
-        public ActionResult<MedicationActiveIngredientsResponseDto> GetById(int id)
+        public async Task<ActionResult<MedicationActiveIngredientsResponseDto>> GetById(int id)
         {
-            var item = _service.GetMedicationActiveIngredient(id);
+            var item = await _service.GetMedicationActiveIngredient(id);
             if (item == null)
             {
                 return NotFound();
@@ -31,30 +31,30 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<MedicationActiveIngredientsResponseDto> Create(CreateUpdateMedicationActiveIngredientsDto item)
+        public async Task<ActionResult<MedicationActiveIngredientsResponseDto>> Create(CreateUpdateMedicationActiveIngredientsDto item)
         {
-            return _service.AddMedicationActiveIngredient(item);
+            return await _service.AddMedicationActiveIngredient(item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CreateUpdateMedicationActiveIngredientsDto item)
+        public async Task<IActionResult> Update(int id, CreateUpdateMedicationActiveIngredientsDto item)
         {
 
-            var itemToUpdate = _service.GetMedicationActiveIngredient(id);
+            var itemToUpdate = await _service.GetMedicationActiveIngredient(id);
 
             if (itemToUpdate == null)
             {
                 return NotFound();
             }
 
-            _service.UpdateMedicationActiveIngredient(id, item);
+            await _service.UpdateMedicationActiveIngredient(id, item);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _service.DeleteMedicationActiveIngredient(id);
+            await _service.DeleteMedicationActiveIngredient(id);
             return NoContent();
         }
     }

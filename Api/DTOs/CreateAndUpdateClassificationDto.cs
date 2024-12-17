@@ -7,6 +7,6 @@ namespace Api.DTOs
 {
     public class CreateAndUpdateClassificationDto
     {
-        public required string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

@@ -14,27 +14,35 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public IEnumerable<PharmaceuticalFormDto> GetAllPharmaceuticalForms() => _repository.GetAll().Select(PharmaceuticalFormDto.FromPharmaceuticalForm);
+        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAllPharmaceuticalForms()
+        {
+            var pharmaceuticalForms = await _repository.GetAllAsync();
+            return pharmaceuticalForms.Select(PharmaceuticalFormDto.FromPharmaceuticalForm);
+        }
 
-        public PharmaceuticalFormDto GetPharmaceuticalForm(int id) => PharmaceuticalFormDto.FromPharmaceuticalForm(_repository.GetById(id));
+        public async Task<PharmaceuticalFormDto> GetPharmaceuticalForm(int id)
+        {
+            var pharmaceuticalForm = await _repository.GetByIdAsync(id);
+            return PharmaceuticalFormDto.FromPharmaceuticalForm(pharmaceuticalForm!);
+        }
 
-        public PharmaceuticalFormDto AddPharmaceuticalForm(string form)
+        public async Task<PharmaceuticalFormDto> AddPharmaceuticalForm(string form)
         {
             var pharmaceuticalForm = new PharmaceuticalForm(form);
-            var response = _repository.Add(pharmaceuticalForm);
+            var response = await _repository.AddAsync(pharmaceuticalForm);
             return PharmaceuticalFormDto.FromPharmaceuticalForm(response);
         }
 
-        public void UpdatePharmaceuticalForm(int id, string form)
+        public async Task UpdatePharmaceuticalForm(int id, string form)
         {
-            var item = _repository.GetById(id);
+            var item = await _repository.GetByIdAsync(id);
             if (item != null)
             {
                 item = new PharmaceuticalForm(form);
-                _repository.Update(item);
+                await _repository.UpdateAsync(item);
             }
         }
 
-        public void DeletePharmaceuticalForm(int id) => _repository.Delete(id);
+        public async Task DeletePharmaceuticalForm(int id) => await _repository.DeleteAsync(id);
     }
 }

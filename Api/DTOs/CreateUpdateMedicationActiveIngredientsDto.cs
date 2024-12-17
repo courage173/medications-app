@@ -9,6 +9,6 @@ namespace Api.DTOs
     {
         public int MedicationId { get; set; }
         public int ActiveIngredientId { get; set; }
-        public required string dosage { get; set; }
+        public string? dosage { get; set; }
     }
 }

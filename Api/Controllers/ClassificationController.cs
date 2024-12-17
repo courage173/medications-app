@@ -17,12 +17,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ClassificationDto> GetAll() => _service.GetAllClassifications();
+        public async Task<IEnumerable<ClassificationDto>> GetAll() => await _service.GetAllClassificationsAsync();
 
         [HttpGet("{id}")]
-        public ActionResult<ClassificationDto> GetById(int id)
+        public async Task<ActionResult<ClassificationDto>> GetById(int id)
         {
-            var classification = _service.GetClassification(id);
+            var classification = await _service.GetClassificationAsync(id);
             if (classification == null)
             {
                 return NotFound();
@@ -31,38 +31,38 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ClassificationDto> Create([FromBody] CreateAndUpdateClassificationDto classification)
+        public async Task<ActionResult<ClassificationDto>> Create([FromBody] CreateAndUpdateClassificationDto classification)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return _service.AddClassification(classification.Name);
+            return await _service.AddClassificationAsync(classification.Name!);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ClassificationDto data)
+        public async Task<IActionResult> Update(int id, [FromBody] ClassificationDto data)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var classification = _service.GetClassification(id);
+            var classification = await _service.GetClassificationAsync(id);
 
             if (id != classification.Id)
             {
                 return BadRequest();
             }
 
-            _service.UpdateClassification(id, data.Name);
+            await _service.UpdateClassificationAsync(id, data.Name!);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _service.DeleteClassification(id);
+            await _service.DeleteClassificationAsync(id);
             return NoContent();
         }
     }

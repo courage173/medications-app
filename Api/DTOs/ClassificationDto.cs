@@ -8,7 +8,7 @@ namespace Api.DTOs
     public record ClassificationDto
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
+        public string? Name { get; set; }
 
         public static ClassificationDto FromClassification(Api.Models.Classification classification)
         {

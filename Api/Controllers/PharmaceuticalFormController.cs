@@ -17,12 +17,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PharmaceuticalFormDto> GetAll() => _service.GetAllPharmaceuticalForms();
+        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAll() => await _service.GetAllPharmaceuticalForms();
 
         [HttpGet("{id}")]
-        public ActionResult<PharmaceuticalFormDto> GetById(int id)
+        public async Task<ActionResult<PharmaceuticalFormDto>> GetById(int id)
         {
-            var item = _service.GetPharmaceuticalForm(id);
+            var item = await _service.GetPharmaceuticalForm(id);
             if (item == null)
             {
                 return NotFound();
@@ -31,17 +31,17 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PharmaceuticalFormDto> Create([FromBody] CreateUpdatePharmaceuticalFormDto item)
+        public async Task<ActionResult<PharmaceuticalFormDto>> Create([FromBody] CreateUpdatePharmaceuticalFormDto item)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return _service.AddPharmaceuticalForm(item.Form);
+            return await _service.AddPharmaceuticalForm(item.Form);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CreateUpdatePharmaceuticalFormDto item)
+        public async Task<IActionResult> Update(int id, [FromBody] CreateUpdatePharmaceuticalFormDto item)
         {
             if (!ModelState.IsValid)
             {
@@ -54,14 +54,14 @@ namespace Api.Controllers
                 return NotFound();
             }
 
-            _service.UpdatePharmaceuticalForm(id, item.Form);
+            await _service.UpdatePharmaceuticalForm(id, item.Form!);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _service.DeletePharmaceuticalForm(id);
+            await _service.DeletePharmaceuticalForm(id);
             return NoContent();
         }
     }

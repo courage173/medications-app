@@ -17,12 +17,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<TherapeuticClassDto> GetAll() => _service.GetAllTherapeuticClasses();
+        public async Task<IEnumerable<TherapeuticClassDto>> GetAll() => await _service.GetAllTherapeuticClasses();
 
         [HttpGet("{id}")]
-        public ActionResult<TherapeuticClassDto> GetById(int id)
+        public async Task<ActionResult<TherapeuticClassDto>> GetById(int id)
         {
-            var item = _service.GetTherapeuticClass(id);
+            var item = await _service.GetTherapeuticClass(id);
             if (item == null)
             {
                 return NotFound();
@@ -31,17 +31,17 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TherapeuticClassDto> Create([FromBody] CreateUpdateTherapeuticClassDto item)
+        public async Task<ActionResult<TherapeuticClassDto>> Create([FromBody] CreateUpdateTherapeuticClassDto item)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return _service.AddTherapeuticClass(item.Name);
+            return await _service.AddTherapeuticClass(item.Name!);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] CreateUpdateTherapeuticClassDto item)
+        public async Task<IActionResult> Update(int id, [FromBody] CreateUpdateTherapeuticClassDto item)
         {
             if (!ModelState.IsValid)
             {
@@ -54,14 +54,14 @@ namespace Api.Controllers
                 return NotFound();
             }
 
-            _service.UpdateTherapeuticClass(id, item.Name);
+            await _service.UpdateTherapeuticClass(id, item.Name!);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _service.DeleteTherapeuticClass(id);
+            await _service.DeleteTherapeuticClass(id);
             return NoContent();
         }
     }

@@ -15,27 +15,35 @@ namespace Api.Services
 
         }
 
-        public IEnumerable<MedicationRecordDTO> GetAllMedications() => _medicationRepository.GetAll().Select(MedicationRecordDTO.FromMedication);
-
-        public MedicationRecordDTO GetMedication(int id) => MedicationRecordDTO.FromMedication(_medicationRepository.GetById(id));
-
-        public void AddMedication(CreateUpdateMedicationRecordDto medicationDto)
+        public async Task<IEnumerable<MedicationRecordDTO>> GetAllMedications()
         {
-            var newMedication = new Medication(medicationDto);
-            _medicationRepository.Add(newMedication);
+            var result = await _medicationRepository.GetAllAsync();
+            return result.Select(MedicationRecordDTO.FromMedication);
         }
 
-        public void UpdateMedication(int id, CreateUpdateMedicationRecordDto updateMedication)
+        public async Task<MedicationRecordDTO> GetMedication(int id)
         {
-            var medication = _medicationRepository.GetById(id);
+            var result = await _medicationRepository.GetByIdAsync(id);
+            return MedicationRecordDTO.FromMedication(result!);
+        }
+
+        public async Task AddMedication(CreateUpdateMedicationRecordDto medicationDto)
+        {
+            var newMedication = new Medication(medicationDto);
+            await _medicationRepository.AddAsync(newMedication);
+        }
+
+        public async Task UpdateMedication(int id, CreateUpdateMedicationRecordDto updateMedication)
+        {
+            var medication = await _medicationRepository.GetByIdAsync(id);
             if (medication != null)
             {
                 medication.UpdateMedication(updateMedication);
-                _medicationRepository.Update(medication);
+                await _medicationRepository.UpdateAsync(medication);
             }
         }
 
-        public void DeleteMedication(int id) => _medicationRepository.Delete(id);
+        public async Task DeleteMedication(int id) => await _medicationRepository.DeleteAsync(id);
 
         public IEnumerable<MedicationRecordDTO> GetMedicationsByTherapeuticClass(int therapeuticClassId) => _medicationRepository.GetMedicationsByTherapeuticClass(therapeuticClassId).Select(MedicationRecordDTO.FromMedication);
 

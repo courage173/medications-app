@@ -7,6 +7,6 @@ namespace Api.DTOs
 {
     public class CreateUpdateTherapeuticClassDto
     {
-        public required string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

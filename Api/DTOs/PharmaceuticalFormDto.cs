@@ -8,7 +8,7 @@ namespace Api.DTOs
     public record PharmaceuticalFormDto
     {
         public int Id { get; set; }
-        public required string Form { get; set; }
+        public string? Form { get; set; }
 
         public static PharmaceuticalFormDto FromPharmaceuticalForm(Api.Models.PharmaceuticalForm pharmaceuticalForm)
         {
