@@ -31,11 +31,10 @@ builder.Services.AddScoped<ITherapeuticClassRepository, TherapeuticClassReposito
 
 builder.Services.AddScoped<MedicationService>();
 builder.Services.AddScoped<ClassificationService>();
-// builder.Services.AddScoped<MedicationActiveIngredientsService>();
-// builder.Services.AddScoped<PharmaceuticalFormService>();
-// builder.Services.AddScoped<TherapeuticClassService>();
+builder.Services.AddScoped<MedicationActiveIngredientsService>();
+builder.Services.AddScoped<PharmaceuticalFormService>();
+builder.Services.AddScoped<TherapeuticClassService>();
 
-// builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 var app = builder.Build();
 

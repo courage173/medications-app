@@ -1,23 +1,29 @@
 using System.Collections.Generic;
+using Api.DTOs;
+using Api.Interfaces;
 using Api.Models;
-using Api.Repositories;
 
 namespace Api.Services
 {
     public class TherapeuticClassService
     {
-        private readonly TherapeuticClassRepository _repository;
+        private readonly ITherapeuticClassRepository _repository;
 
-        public TherapeuticClassService(TherapeuticClassRepository repository)
+        public TherapeuticClassService(ITherapeuticClassRepository repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<TherapeuticClass> GetAllTherapeuticClasses() => _repository.GetAll();
+        public IEnumerable<TherapeuticClassDto> GetAllTherapeuticClasses() => _repository.GetAll().Select(TherapeuticClassDto.FromTherapeuticClass);
 
-        public TherapeuticClass GetTherapeuticClass(int id) => _repository.GetById(id);
+        public TherapeuticClassDto GetTherapeuticClass(int id) => TherapeuticClassDto.FromTherapeuticClass(_repository.GetById(id));
 
-        public void AddTherapeuticClass(TherapeuticClass item) => _repository.Add(item);
+        public TherapeuticClassDto AddTherapeuticClass(string name)
+        {
+            var therapeuticClass = new TherapeuticClass(name);
+            var response = _repository.Add(therapeuticClass);
+            return TherapeuticClassDto.FromTherapeuticClass(response);
+        }
 
         public void UpdateTherapeuticClass(int id, string name)
         {

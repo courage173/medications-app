@@ -1,23 +1,29 @@
 using System.Collections.Generic;
+using Api.DTOs;
+using Api.Interfaces;
 using Api.Models;
-using Api.Repositories;
 
 namespace Api.Services
 {
     public class PharmaceuticalFormService
     {
-        private readonly PharmaceuticalFormRepository _repository;
+        private readonly IPharmaceuticalFormRepository _repository;
 
-        public PharmaceuticalFormService(PharmaceuticalFormRepository repository)
+        public PharmaceuticalFormService(IPharmaceuticalFormRepository repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<PharmaceuticalForm> GetAllPharmaceuticalForms() => _repository.GetAll();
+        public IEnumerable<PharmaceuticalFormDto> GetAllPharmaceuticalForms() => _repository.GetAll().Select(PharmaceuticalFormDto.FromPharmaceuticalForm);
 
-        public PharmaceuticalForm GetPharmaceuticalForm(int id) => _repository.GetById(id);
+        public PharmaceuticalFormDto GetPharmaceuticalForm(int id) => PharmaceuticalFormDto.FromPharmaceuticalForm(_repository.GetById(id));
 
-        public void AddPharmaceuticalForm(PharmaceuticalForm item) => _repository.Add(item);
+        public PharmaceuticalFormDto AddPharmaceuticalForm(string form)
+        {
+            var pharmaceuticalForm = new PharmaceuticalForm(form);
+            var response = _repository.Add(pharmaceuticalForm);
+            return PharmaceuticalFormDto.FromPharmaceuticalForm(response);
+        }
 
         public void UpdatePharmaceuticalForm(int id, string form)
         {

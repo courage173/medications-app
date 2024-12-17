@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Api.Services;
+using Api.DTOs;
 
 namespace Api.Controllers
 {
@@ -17,10 +17,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<MedicationActiveIngredients> GetAll() => _service.GetAllMedicationActiveIngredients();
+        public IEnumerable<MedicationActiveIngredientsResponseDto> GetAll() => _service.GetAllMedicationActiveIngredients();
 
         [HttpGet("{id}")]
-        public ActionResult<MedicationActiveIngredients> GetById(int id)
+        public ActionResult<MedicationActiveIngredientsResponseDto> GetById(int id)
         {
             var item = _service.GetMedicationActiveIngredient(id);
             if (item == null)
@@ -31,21 +31,23 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<MedicationActiveIngredients> Create(MedicationActiveIngredients item)
+        public ActionResult<MedicationActiveIngredientsResponseDto> Create(CreateUpdateMedicationActiveIngredientsDto item)
         {
-            _service.AddMedicationActiveIngredient(item);
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return _service.AddMedicationActiveIngredient(item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, MedicationActiveIngredients item)
+        public IActionResult Update(int id, CreateUpdateMedicationActiveIngredientsDto item)
         {
-            if (id != item.Id)
+
+            var itemToUpdate = _service.GetMedicationActiveIngredient(id);
+
+            if (itemToUpdate == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _service.UpdateMedicationActiveIngredient(id, item.MedicationId, item.ActiveIngredientId, item.dosage);
+            _service.UpdateMedicationActiveIngredient(id, item);
             return NoContent();
         }
 

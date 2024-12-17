@@ -1,30 +1,37 @@
 using System.Collections.Generic;
+using Api.DTOs;
+using Api.Interfaces;
 using Api.Models;
-using Api.Repositories;
 
 namespace Api.Services
 {
     public class MedicationActiveIngredientsService
     {
-        private readonly MedicationActiveIngredientsRepository _repository;
+        private readonly IMedicationActiveIngredientsRepository _repository;
 
-        public MedicationActiveIngredientsService(MedicationActiveIngredientsRepository repository)
+        public MedicationActiveIngredientsService(IMedicationActiveIngredientsRepository repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<MedicationActiveIngredients> GetAllMedicationActiveIngredients() => _repository.GetAll();
+        public IEnumerable<MedicationActiveIngredientsResponseDto> GetAllMedicationActiveIngredients() => _repository.GetAll().Select(MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients);
 
-        public MedicationActiveIngredients GetMedicationActiveIngredient(int id) => _repository.GetById(id);
+        public MedicationActiveIngredientsResponseDto GetMedicationActiveIngredient(int id) => MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients(_repository.GetById(id));
 
-        public void AddMedicationActiveIngredient(MedicationActiveIngredients item) => _repository.Add(item);
+        public MedicationActiveIngredientsResponseDto AddMedicationActiveIngredient(CreateUpdateMedicationActiveIngredientsDto data)
+        {
+            var newMedicationActiveIngredients = new MedicationActiveIngredients(data);
+            var response = _repository.Add(newMedicationActiveIngredients);
 
-        public void UpdateMedicationActiveIngredient(int id, int medicationId, int activeIngredientId, string dosage)
+            return MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients(response);
+        }
+
+        public void UpdateMedicationActiveIngredient(int id, CreateUpdateMedicationActiveIngredientsDto data)
         {
             var item = _repository.GetById(id);
             if (item != null)
             {
-                item = new MedicationActiveIngredients(medicationId, activeIngredientId, dosage);
+                item = new MedicationActiveIngredients(data);
                 _repository.Update(item);
             }
         }

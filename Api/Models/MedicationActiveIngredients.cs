@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.DTOs;
 
 namespace Api.Models
 {
@@ -18,10 +19,10 @@ namespace Api.Models
 
         private MedicationActiveIngredients() { }
 
-        public MedicationActiveIngredients(int medicationId, int activeIngredientId, string dosage)
+        public MedicationActiveIngredients(CreateUpdateMedicationActiveIngredientsDto data)
         {
-            MedicationId = medicationId;
-            ActiveIngredientId = activeIngredientId;
+            MedicationId = data.MedicationId;
+            ActiveIngredientId = data.ActiveIngredientId;
             this.dosage = dosage ?? throw new ArgumentNullException(nameof(dosage));
         }
     }

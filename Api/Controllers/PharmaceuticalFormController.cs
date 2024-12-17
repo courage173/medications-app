@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Api.Services;
+using Api.DTOs;
 
 namespace Api.Controllers
 {
@@ -17,10 +17,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PharmaceuticalForm> GetAll() => _service.GetAllPharmaceuticalForms();
+        public IEnumerable<PharmaceuticalFormDto> GetAll() => _service.GetAllPharmaceuticalForms();
 
         [HttpGet("{id}")]
-        public ActionResult<PharmaceuticalForm> GetById(int id)
+        public ActionResult<PharmaceuticalFormDto> GetById(int id)
         {
             var item = _service.GetPharmaceuticalForm(id);
             if (item == null)
@@ -31,18 +31,19 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PharmaceuticalForm> Create(PharmaceuticalForm item)
+        public ActionResult<PharmaceuticalFormDto> Create(CreateUpdatePharmaceuticalForm item)
         {
-            _service.AddPharmaceuticalForm(item);
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return _service.AddPharmaceuticalForm(item.Form);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, PharmaceuticalForm item)
+        public IActionResult Update(int id, CreateUpdatePharmaceuticalForm item)
         {
-            if (id != item.Id)
+            var pharmaceuticalForm = _service.GetPharmaceuticalForm(id);
+
+            if (pharmaceuticalForm == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             _service.UpdatePharmaceuticalForm(id, item.Form);

@@ -2,7 +2,6 @@
 using Api.DTOs;
 using Api.Interfaces;
 using Api.Models;
-using AutoMapper;
 
 namespace Api.Services
 {

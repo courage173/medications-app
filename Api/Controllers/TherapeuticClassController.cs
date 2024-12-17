@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Api.Services;
+using Api.DTOs;
 
 namespace Api.Controllers
 {
@@ -17,10 +17,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<TherapeuticClass> GetAll() => _service.GetAllTherapeuticClasses();
+        public IEnumerable<TherapeuticClassDto> GetAll() => _service.GetAllTherapeuticClasses();
 
         [HttpGet("{id}")]
-        public ActionResult<TherapeuticClass> GetById(int id)
+        public ActionResult<TherapeuticClassDto> GetById(int id)
         {
             var item = _service.GetTherapeuticClass(id);
             if (item == null)
@@ -31,18 +31,19 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TherapeuticClass> Create(TherapeuticClass item)
+        public ActionResult<TherapeuticClassDto> Create(CreateUpdateTherapeuticClassRepository item)
         {
-            _service.AddTherapeuticClass(item);
-            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+            return _service.AddTherapeuticClass(item.Name);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, TherapeuticClass item)
+        public IActionResult Update(int id, CreateUpdateTherapeuticClassRepository item)
         {
-            if (id != item.Id)
+            var therapeuticClass = _service.GetTherapeuticClass(id);
+
+            if (therapeuticClass == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             _service.UpdateTherapeuticClass(id, item.Name);

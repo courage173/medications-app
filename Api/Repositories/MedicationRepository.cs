@@ -1,8 +1,6 @@
 using Api.Data;
-using Api.DTOs;
 using Api.Interfaces;
 using Api.Models;
-using AutoMapper;
 
 namespace Api.Repositories
 {

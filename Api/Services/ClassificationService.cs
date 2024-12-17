@@ -1,9 +1,7 @@
-using System.Collections.Generic;
+
 using Api.DTOs;
 using Api.Interfaces;
 using Api.Models;
-using Api.Repositories;
-using AutoMapper;
 
 namespace Api.Services
 {
