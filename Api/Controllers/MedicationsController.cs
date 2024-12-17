@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.DTOs;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Medication medication)
+        public IActionResult Update(int id, [FromBody] CreateMedicationDto medication)
         {
-            _service.UpdateMedication(id, medication.Name, medication.CompetentAuthorityStatus, medication.InternalStatus, medication.Unit, medication.PharmaceuticalFormId, medication.ATCCodeId, medication.TherapeuticClassId, medication.ClassificationId);
+            _service.UpdateMedication(id, medication);
             return Ok();
         }
 

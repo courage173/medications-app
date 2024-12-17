@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Repositories;
 using Api.Services;
+using Api.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +22,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 
-builder.Services.AddScoped<MedicationRepository>();
-builder.Services.AddScoped<ClassificationRepository>();
-builder.Services.AddScoped<MedicationActiveIngredientsRepository>();
-builder.Services.AddScoped<PharmaceuticalFormRepository>();
-builder.Services.AddScoped<TherapeuticClassRepository>();
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+builder.Services.AddScoped<IClassificationRepository, ClassificationRepository>();
+builder.Services.AddScoped<IMedicationActiveIngredientsRepository, MedicationActiveIngredientsRepository>();
+builder.Services.AddScoped<IPharmaceuticalFormRepository, PharmaceuticalFormRepository>();
+builder.Services.AddScoped<ITherapeuticClassRepository, TherapeuticClassRepository>();
 
 builder.Services.AddScoped<MedicationService>();
 builder.Services.AddScoped<ClassificationService>();

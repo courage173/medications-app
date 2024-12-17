@@ -1,3 +1,4 @@
+using Api.DTOs;
 using Api.Models;
 
 namespace Api.Models
@@ -26,31 +27,30 @@ namespace Api.Models
 
         private Medication() { }
 
-        public Medication(string name,
-                string competentAuthorityStatus, string internalStatus, string unit, int pharmaceuticalFormId, int atcCodeId, int therapeuticClassId, int classificationId)
+        public Medication(MedicationRecordDTO medicationRecord)
         {
 
-            Name = name;
-            CompetentAuthorityStatus = competentAuthorityStatus;
-            InternalStatus = internalStatus;
-            Unit = unit;
-            PharmaceuticalFormId = pharmaceuticalFormId;
-            TherapeuticClassId = therapeuticClassId;
-            ClassificationId = classificationId;
-            ATCCodeId = atcCodeId;
+            Name = medicationRecord.Name;
+            CompetentAuthorityStatus = medicationRecord.CompetentAuthorityStatus;
+            InternalStatus = medicationRecord.InternalStatus;
+            Unit = medicationRecord.Unit;
+            PharmaceuticalFormId = medicationRecord.PharmaceuticalFormId;
+            ATCCodeId = medicationRecord.ATCCodeId;
+            TherapeuticClassId = medicationRecord.TherapeuticClassId;
+            ClassificationId = medicationRecord.ClassificationId;
 
         }
 
-        public void UpdateMedication(string name, string competentAuthorityStatus, string internalStatus, string unit, int pharmaceuticalFormId, int atcCodeId, int therapeuticClassId, int classificationId)
+        public void UpdateMedication(MedicationRecordDTO medicationRecord)
         {
-            Name = name;
-            CompetentAuthorityStatus = competentAuthorityStatus;
-            InternalStatus = internalStatus;
-            Unit = unit;
-            PharmaceuticalFormId = pharmaceuticalFormId;
-            ATCCodeId = atcCodeId;
-            TherapeuticClassId = therapeuticClassId;
-            ClassificationId = classificationId;
+            Name = medicationRecord.Name;
+            CompetentAuthorityStatus = medicationRecord.CompetentAuthorityStatus;
+            InternalStatus = medicationRecord.InternalStatus;
+            Unit = medicationRecord.Unit;
+            PharmaceuticalFormId = medicationRecord.PharmaceuticalFormId;
+            ATCCodeId = medicationRecord.ATCCodeId;
+            TherapeuticClassId = medicationRecord.TherapeuticClassId;
+            ClassificationId = medicationRecord.ClassificationId;
         }
     }
 }

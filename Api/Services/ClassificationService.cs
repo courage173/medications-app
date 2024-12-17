@@ -1,30 +1,51 @@
 using System.Collections.Generic;
+using Api.DTOs;
+using Api.Interfaces;
 using Api.Models;
 using Api.Repositories;
+using AutoMapper;
 
 namespace Api.Services
 {
     public class ClassificationService
     {
-        private readonly ClassificationRepository _repository;
 
-        public ClassificationService(ClassificationRepository repository)
+        private readonly IClassificationRepository _repository;
+        private readonly IMapper _mapper;
+
+        public ClassificationService(IMapper mapper, ClassificationRepository repository)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Classification> GetAllClassifications() => _repository.GetAll();
+        public IEnumerable<ClassificationDto> GetAllClassifications()
+        {
+            var classifications = _repository.GetAll();
+            var classificationRecords = _mapper.Map<IEnumerable<ClassificationDto>>(classifications);
+            return classificationRecords;
+        }
 
-        public Classification GetClassification(int id) => _repository.GetById(id);
+        public ClassificationDto GetClassification(int id)
+        {
+            var classification = _repository.GetById(id);
 
-        public void AddClassification(Classification classification) => _repository.Add(classification);
+            var classificationRecord = _mapper.Map<ClassificationDto>(classification);
+            return classificationRecord;
+        }
+
+        public void AddClassification(ClassificationDto classification)
+        {
+            var newClassification = _mapper.Map<Classification>(classification);
+            _repository.Add(newClassification);
+        }
 
         public void UpdateClassification(int id, string name)
         {
             var classification = _repository.GetById(id);
             if (classification != null)
             {
-                classification = new Classification(name);
+                classification.UpdateClassification(name);
                 _repository.Update(classification);
             }
         }

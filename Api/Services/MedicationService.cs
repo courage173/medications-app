@@ -1,40 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Api.DTOs;
 using Api.Interfaces;
 using Api.Models;
-using Api.Repositories;
+using AutoMapper;
 
 namespace Api.Services
 {
     public class MedicationService
     {
-        private readonly MedicationRepository _medicationRepository;
+        private readonly IMedicationRepository _medicationRepository;
+        private readonly IMapper _mapper;
 
-        public MedicationService(MedicationRepository repository)
+        public MedicationService(IMapper mapper, IMedicationRepository repository)
         {
             _medicationRepository = repository;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Medication> GetAllMedications() => _medicationRepository.GetAll();
+        public IEnumerable<MedicationRecordDTO> GetAllMedications()
+        {
+            var medications = _medicationRepository.GetAll();
+            var medicationRecords = _mapper.Map<IEnumerable<MedicationRecordDTO>>(medications);
+            return medicationRecords;
+        }
 
-        public Medication GetMedication(int id) => _medicationRepository.GetById(id);
+        public MedicationRecordDTO GetMedication(int id)
+        {
+            var medication = _medicationRepository.GetById(id);
 
-        public void AddMedication(Medication medication) => _medicationRepository.Add(medication);
+            var medicationRecord = _mapper.Map<MedicationRecordDTO>(medication);
+            return medicationRecord;
+        }
 
-        public void UpdateMedication(int id, string name, string competentAuthorityStatus, string internalStatus, string unit, int pharmaceuticalFormId, int atcCodeId, int therapeuticClassId, int classificationId)
+        public void AddMedication(MedicationRecordDTO medication)
+        {
+            var newMedication = _mapper.Map<Medication>(medication);
+            _medicationRepository.Add(newMedication);
+        }
+
+        public void UpdateMedication(int id, MedicationRecordDTO updateMedication)
         {
             var medication = _medicationRepository.GetById(id);
             if (medication != null)
             {
-                medication.UpdateMedication(name, competentAuthorityStatus, internalStatus, unit, pharmaceuticalFormId, atcCodeId, therapeuticClassId, classificationId);
+                medication.UpdateMedication(updateMedication);
                 _medicationRepository.Update(medication);
             }
         }
 
         public void DeleteMedication(int id) => _medicationRepository.Delete(id);
 
-        public IEnumerable<Medication> GetMedicationsByTherapeuticClass(int therapeuticClassId) => _medicationRepository.GetMedicationsByTherapeuticClass(therapeuticClassId);
+        public IEnumerable<MedicationRecordDTO> GetMedicationsByTherapeuticClass(int therapeuticClassId)
+        {
+            var medications = _medicationRepository.GetMedicationsByTherapeuticClass(therapeuticClassId);
+            var medicationRecords = _mapper.Map<IEnumerable<MedicationRecordDTO>>(medications);
+            return medicationRecords;
+        }
     }
 }

@@ -16,5 +16,13 @@ namespace Api.Models
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
+
+        public void UpdateClassification(string name)
+
+        {
+
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+
+        }
     }
 }
