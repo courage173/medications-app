@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Models
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class ATCCodes
     {
         public int Id { get; private set; }

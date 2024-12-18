@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { Car } from './models/medication.interface';
+import { Table } from 'primeng/table';
+import { PrimeNG } from 'primeng/config';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { TableComponent } from '../../shared/table/table.component';
 
 @Component({
   selector: 'app-medication',
   templateUrl: './medication.component.html',
-  imports: [CommonModule, TableModule],
+  imports: [TableComponent],
 })
 export class MedicationComponent implements OnInit {
   cars: Car[] = [
@@ -36,9 +42,18 @@ export class MedicationComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  loading: boolean = false;
+  columns = [
+    { field: 'vin' },
+    { field: 'year' },
+    { field: 'brand' },
+    { field: 'color' },
+  ];
+
+  constructor(private primengConfig: PrimeNG) {}
 
   ngOnInit(): void {
     // Initialization logic here
+    this.primengConfig.ripple.set(true);
   }
 }

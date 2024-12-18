@@ -1,0 +1,64 @@
+<p-table
+  [value]="data"
+  [rows]="itemsPerPage"
+  [showCurrentPageReport]="true"
+  [loading]="loading"
+  [paginator]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [filterDelay]="0"
+>
+  <ng-template pTemplate="caption">
+    <div class="table-header flex justify-between">
+      {{ title }}
+      <div class="flex items-center">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input type="text" pInputText placeholder="Search" />
+        </p-iconfield>
+        <p-button
+          icon="pi pi-plus"
+          arial-label="Add new"
+          class="ml-3"
+          (click)="addNew()"
+        />
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let header of headers">{{ header }}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr>
+      <td *ngFor="let column of columns">{{ data[column.field] }}</td>
+      <td style="text-align: center">
+        <button
+          pButton
+          type="button"
+          class="p-button-secondary"
+          icon="pi pi-cog"
+          (click)="op.toggle($event)"
+        ></button>
+
+        <p-popover #op>
+          <button
+            pButton
+            type="button"
+            class="p-button-info mr-3"
+            icon="pi pi-pencil"
+            (click)="edit(data)"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="p-button-danger"
+            icon="pi pi-trash"
+            (click)="delete(data)"
+          ></button>
+        </p-popover>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

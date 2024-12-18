@@ -50,6 +50,11 @@ namespace Api.Data
                    .HasOne(mai => mai.ActiveIngredient)
                    .WithMany()
                    .HasForeignKey(mai => mai.ActiveIngredientId);
+
+            modelBuilder.Entity<ATCCodes>().HasIndex(u => u.Name).IsUnique();
+            modelBuilder.Entity<Classification>().HasIndex(u => u.Name).IsUnique();
+            modelBuilder.Entity<PharmaceuticalForm>().HasIndex(u => u.Form).IsUnique();
+            modelBuilder.Entity<TherapeuticClass>().HasIndex(u => u.Name).IsUnique();
         }
     }
 }
