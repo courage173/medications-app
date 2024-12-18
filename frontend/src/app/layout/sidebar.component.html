@@ -1,0 +1,19 @@
+<div
+  class="h-full md:flex flex-col inset-y-0 left-0 flex flex-col bg-[#18181b] text-gray-300 border-r border-gray-700 shadow-lg w-64"
+>
+  <div class="flex items-center justify-center h-16 border-b border-gray-700">
+    <h1 class="text-lg font-semibold">Header</h1>
+  </div>
+  <div class="flex-1 overflow-y-auto">
+    <ul class="p-4 space-y-2">
+      <li *ngFor="let item of routes" [id]="item.title">
+        <a
+          [href]="item.routerLink"
+          [class.bg-gray-800]="item.routerLink === activeRoute"
+          class="block px-4 py-2 rounded hover:bg-gray-800"
+          >{{ item.title }}</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
