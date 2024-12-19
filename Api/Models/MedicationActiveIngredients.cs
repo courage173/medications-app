@@ -17,7 +17,6 @@ namespace Api.Models
         public virtual Medication Medication { get; private set; }
         public virtual ActiveIngredient ActiveIngredient { get; private set; }
 
-        private MedicationActiveIngredients() { }
 
         public MedicationActiveIngredients(CreateUpdateMedicationActiveIngredientsDto data)
         {

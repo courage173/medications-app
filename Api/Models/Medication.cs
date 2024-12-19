@@ -25,8 +25,6 @@ namespace Api.Models
 
         public ICollection<MedicationActiveIngredients> MedicationActiveIngredients { get; private set; }
 
-        private Medication() { }
-
         public Medication(CreateUpdateMedicationRecordDto medicationRecord)
         {
 

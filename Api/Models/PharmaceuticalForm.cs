@@ -13,8 +13,6 @@ namespace Api.Models
         // Navigation Properties
         public ICollection<PharmaceuticalForm> MedicationPharmaceuticalForms { get; private set; } = new List<PharmaceuticalForm>();
 
-        private PharmaceuticalForm() { } // Required for EF Core
-
         public PharmaceuticalForm(string form)
         {
             Form = form ?? throw new ArgumentNullException(nameof(form));
