@@ -47,7 +47,7 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var therapeuticClass = _service.GetTherapeuticClass(id);
+            var therapeuticClass = await _service.GetTherapeuticClass(id);
 
             if (therapeuticClass == null)
             {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { PrimeNG } from 'primeng/config';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Popover } from 'primeng/popover';
+import { ClickOutsideDirective } from '../../click-outside.directive';
 
 @Component({
   selector: 'app-table',
@@ -18,10 +19,12 @@ import { Popover } from 'primeng/popover';
     IconField,
     InputIcon,
     ButtonModule,
-    Popover,
+    ClickOutsideDirective,
   ],
 })
 export class TableComponent {
+  selectedItem: any;
+
   @Input() headers: string[] = [];
   @Input() columns: { field: string }[] = [];
   @Input() data: any[] = [];
@@ -30,12 +33,24 @@ export class TableComponent {
   @Input() itemsPerPage = 15;
   @Input() title: string = '';
   @Input() addNew: () => void = () => {};
-  @Input() edit: (id: number) => void = () => {};
-  @Input() delete: (id: number) => void = () => {};
+  @Input() edit: (data: any) => void = () => {};
+  @Input() delete: (data: any) => void = () => {};
 
   constructor(private primengConfig: PrimeNG) {}
+  @ViewChild('op') op!: Popover;
 
+  handleAction(event: MouseEvent, item: any) {
+    if (this.selectedItem?.id === item.id) {
+      this.selectedItem = null;
+    } else {
+      this.selectedItem = item;
+    }
+  }
   ngOnInit(): void {
     this.primengConfig.ripple.set(true);
+  }
+
+  onOutsideClick(): void {
+    this.selectedItem = null;
   }
 }

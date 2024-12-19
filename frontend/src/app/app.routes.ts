@@ -8,4 +8,11 @@ export const routes: Routes = [
         (m) => m.MedicationComponent
       ),
   },
+  {
+    path: 'therapeutic-classes',
+    loadComponent: () =>
+      import('./features/therapeuticClass/therapeutic-class.component').then(
+        (m) => m.TherapeuticClassComponent
+      ),
+  },
 ];

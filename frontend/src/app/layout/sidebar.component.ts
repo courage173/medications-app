@@ -15,9 +15,9 @@ export class SidebarComponent {
       routerLink: '/',
     },
     {
-      title: 'Classifications',
+      title: 'Therapeutic Classes',
       icon: 'pi pi-info',
-      routerLink: '/classifications',
+      routerLink: '/therapeutic-classes',
     },
     {
       title: 'Active Ingredients',

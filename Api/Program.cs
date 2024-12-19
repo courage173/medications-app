@@ -21,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUpdateMedicationValidator>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -53,6 +54,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(builder => builder
+     .AllowAnyOrigin()
+     .AllowAnyMethod()
+     .AllowAnyHeader());
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

@@ -8,15 +8,14 @@ namespace Api.DTOs
         public string? InternalStatus { get; set; }
         public string? Unit { get; set; }
         public int PharmaceuticalFormId { get; set; }
-        public string? PharmaceuticalFormName { get; set; } // Added related entity field
+        public string? PharmaceuticalFormName { get; set; }
         public int ATCCodeId { get; set; }
-        public string? ATCCodeName { get; set; } // Added related entity field
+        public string? ATCCodeName { get; set; }
         public int TherapeuticClassId { get; set; }
-        public string? TherapeuticClassName { get; set; } // Added related entity field
-        public int ClassificationId { get; set; }
-        public string? ClassificationName { get; set; } // Added related entity field
+        public string? TherapeuticClassName { get; set; }
+        public string? ClassificationName { get; set; }
 
-        public List<ActiveIngredientDTO> ActiveIngredients { get; set; } = new(); // Added related collection
+        public List<ActiveIngredientDTO> ActiveIngredients { get; set; } = new();
 
         public static MedicationListResponseDto FromMedication(Api.Models.Medication medication)
         {

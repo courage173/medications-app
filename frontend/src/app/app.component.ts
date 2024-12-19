@@ -9,6 +9,7 @@ import { SidebarComponent } from './layout/sidebar.component';
   imports: [CommonModule, RouterOutlet, SidebarModule, SidebarComponent],
   standalone: true,
   templateUrl: './app.component.html',
+  providers: [],
 })
 export class AppComponent {
   title = 'frontend';

@@ -1,12 +1,14 @@
 <p-table
   [value]="data"
   [rows]="itemsPerPage"
+  selectionMode="single"
   [showCurrentPageReport]="true"
   [loading]="loading"
   [paginator]="true"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
   [filterDelay]="0"
 >
+  >
   <ng-template pTemplate="caption">
     <div class="table-header flex justify-between">
       {{ title }}
@@ -28,25 +30,30 @@
   <ng-template pTemplate="header">
     <tr>
       <th *ngFor="let header of headers">{{ header }}</th>
+      <th style="text-align: center">Actions</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-data>
     <tr>
       <td *ngFor="let column of columns">{{ data[column.field] }}</td>
-      <td style="text-align: center">
+      <td style="text-align: center; position: relative">
         <button
           pButton
           type="button"
           class="p-button-secondary"
           icon="pi pi-cog"
-          (click)="op.toggle($event)"
+          (click)="handleAction($event, data)"
         ></button>
-
-        <p-popover #op>
+        <div
+          appClickOutside
+          (clickOutside)="onOutsideClick()"
+          class="popover-container bg-[#18181b] border border-[#3f3f46] rounded absolute p-3 flex flex-col items-center top-3/4 left-1/2 z-[1000] -translate-x-1/2"
+          *ngIf="selectedItem?.id === data.id"
+        >
           <button
             pButton
             type="button"
-            class="p-button-info mr-3"
+            class="p-button-info mb-3"
             icon="pi pi-pencil"
             (click)="edit(data)"
           ></button>
@@ -57,7 +64,7 @@
             icon="pi pi-trash"
             (click)="delete(data)"
           ></button>
-        </p-popover>
+        </div>
       </td>
     </tr>
   </ng-template>
