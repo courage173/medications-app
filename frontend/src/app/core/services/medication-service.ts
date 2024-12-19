@@ -9,19 +9,20 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class MedicationService {
-  private apiUrl =
-    'http://localhost:5283/api/medications?pageNumber=1&pageSize=15';
+  private apiUrl = 'http://localhost:5283/api/medications';
   constructor(private http: HttpClient, private stateService: StateService) {}
 
-  getMedications(): Observable<Medication[]> {
-    return this.http.get<Medication[]>(this.apiUrl).pipe(
-      tap(() => this.stateService.setLoading(false)),
-      catchError((error) => {
-        this.stateService.setLoading(false);
-        this.stateService.setError(error.message);
-        return throwError(() => new Error(error.message));
-      })
-    );
+  getMedications(pageNumber = 1): Observable<Medication[]> {
+    return this.http
+      .get<Medication[]>(`${this.apiUrl}/?pageNumber=${pageNumber}&pageSize=15`)
+      .pipe(
+        tap(() => this.stateService.setLoading(false)),
+        catchError((error) => {
+          this.stateService.setLoading(false);
+          this.stateService.setError(error.message);
+          return throwError(() => new Error(error.message));
+        })
+      );
   }
 
   getMedicationById(id: number): Observable<Medication> {

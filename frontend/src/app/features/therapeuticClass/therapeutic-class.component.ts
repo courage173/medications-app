@@ -108,18 +108,18 @@ export class TherapeuticClassComponent implements OnInit {
       });
   };
 
-  deleteTherapeuticClass(id: number) {
-    this.therapeuticClassService.deleteTherapeuticClass(id).subscribe({
+  deleteTherapeuticClass = (data: TherapeuticClass) => {
+    this.therapeuticClassService.deleteTherapeuticClass(data.id).subscribe({
       next: () => {
         this.therapeuticClasses = this.therapeuticClasses.filter(
-          (therapeuticClass) => therapeuticClass.id !== id
+          (therapeuticClass) => therapeuticClass.id !== data.id
         );
       },
       error: (error) => {
         console.error(error);
       },
     });
-  }
+  };
 
   updateTherapeuticClass = (id: number, name: string) => {
     this.therapeuticClassService.updateTherapeuticClass(id, name).subscribe({

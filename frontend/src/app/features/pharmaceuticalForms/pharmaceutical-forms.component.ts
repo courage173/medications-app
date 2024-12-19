@@ -65,12 +65,12 @@ export class PharmaceuticalFormsComponent implements OnInit {
     if (this.formGroup.valid) {
       // Handle form submission
       if (this.itemToUpdate) {
-        this.updateTherapeuticClass(
+        this.updatePharmaceuticalClass(
           this.itemToUpdate.id,
           this.formGroup.value.form
         );
       } else {
-        this.addTherapeuticClass();
+        this.addPharmaceuticalClass();
       }
     }
   }
@@ -91,7 +91,7 @@ export class PharmaceuticalFormsComponent implements OnInit {
     this.visible = false;
   };
 
-  addTherapeuticClass = () => {
+  addPharmaceuticalClass = () => {
     this.pharmaceuticalFormService
       .addPharmaceuticalForm(this.formGroup.value.form)
       .subscribe({
@@ -108,20 +108,20 @@ export class PharmaceuticalFormsComponent implements OnInit {
       });
   };
 
-  deleteTherapeuticClass(id: number) {
-    this.pharmaceuticalFormService.deletePharmaceuticalForm(id).subscribe({
+  deletePharmaceuticalClass = (data: PharmaceuticalForm) => {
+    this.pharmaceuticalFormService.deletePharmaceuticalForm(data.id).subscribe({
       next: () => {
         this.pharmaceuticalForms = this.pharmaceuticalForms.filter(
-          (pharmaceuticalForm) => pharmaceuticalForm.id !== id
+          (pharmaceuticalForm) => pharmaceuticalForm.id !== data.id
         );
       },
       error: (error) => {
         console.error(error);
       },
     });
-  }
+  };
 
-  updateTherapeuticClass = (id: number, form: string) => {
+  updatePharmaceuticalClass = (id: number, form: string) => {
     this.pharmaceuticalFormService
       .updatePharmaceuticalForm(id, form)
       .subscribe({

@@ -320,6 +320,16 @@ export class MedicationComponent implements OnInit {
     }
   }
 
+  onDelete = (data: Medication) => {
+    this.medicationService.deleteMedication(data.id).subscribe(() => {
+      this.medications = this.medications.filter(
+        (medication) => medication.id !== data.id
+      );
+    });
+
+    this.refetchMedications();
+  };
+
   addMedication(data: Medication): void {
     this.medicationService.addMedication(data).subscribe((medication) => {
       this.medications = [...this.medications, medication];

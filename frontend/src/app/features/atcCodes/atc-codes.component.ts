@@ -100,16 +100,18 @@ export class AtcCodesComponent implements OnInit {
     });
   };
 
-  deleteATCCode(id: number) {
-    this.atcCodeService.deleteAtcCode(id).subscribe({
+  deleteATCCode = (data: AtcCode) => {
+    this.atcCodeService.deleteAtcCode(data.id).subscribe({
       next: () => {
-        this.atcCodes = this.atcCodes.filter((atcCode) => atcCode.id !== id);
+        this.atcCodes = this.atcCodes.filter(
+          (atcCode) => atcCode.id !== data.id
+        );
       },
       error: (error) => {
         console.error(error);
       },
     });
-  }
+  };
 
   updateATCCode = (id: number, code: string) => {
     this.atcCodeService.updateAtcCode(id, code).subscribe({

@@ -65,12 +65,12 @@ export class ActiveIngredientsComponent implements OnInit {
     if (this.formGroup.valid) {
       // Handle form submission
       if (this.itemToUpdate) {
-        this.updateTherapeuticClass(
+        this.updateActiveIngredient(
           this.itemToUpdate.id,
           this.formGroup.value.name
         );
       } else {
-        this.addTherapeuticClass();
+        this.addActiveIngredient();
       }
     }
   }
@@ -91,7 +91,7 @@ export class ActiveIngredientsComponent implements OnInit {
     this.visible = false;
   };
 
-  addTherapeuticClass = () => {
+  addActiveIngredient = () => {
     this.activeIngredientService
       .addActiveIngredient(this.formGroup.value.name)
       .subscribe({
@@ -108,20 +108,20 @@ export class ActiveIngredientsComponent implements OnInit {
       });
   };
 
-  deleteTherapeuticClass(id: number) {
-    this.activeIngredientService.deleteActiveIngredient(id).subscribe({
+  deleteActiveIngredient = (data: ActiveIngredient) => {
+    this.activeIngredientService.deleteActiveIngredient(data.id).subscribe({
       next: () => {
         this.activeIngredients = this.activeIngredients.filter(
-          (activeIngredient) => activeIngredient.id !== id
+          (activeIngredient) => activeIngredient.id !== data.id
         );
       },
       error: (error) => {
         console.error(error);
       },
     });
-  }
+  };
 
-  updateTherapeuticClass = (id: number, name: string) => {
+  updateActiveIngredient = (id: number, name: string) => {
     this.activeIngredientService.updateActiveIngredient(id, name).subscribe({
       next: (ActiveIngredient) => {
         this.activeIngredients = this.activeIngredients.map(

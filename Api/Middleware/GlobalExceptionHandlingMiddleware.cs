@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Api.Middleware
 {
