@@ -16,6 +16,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { Select } from 'primeng/select';
+import { ActiveIngredientService } from '../../core/services/active-ingredients-service';
+import { PharmaceuticalFormService } from '../../core/services/pharmaceutical-form-service';
+import { AtcCodeService } from '../../core/services/act-code-service';
+import { TherapeuticClassService } from '../../core/services/therapeutic-class-service';
+import { forkJoin } from 'rxjs';
+import { ActiveIngredient } from '../../core/models/active-ingredients.model';
+import { PharmaceuticalForm } from '../../core/models/pharmaceutical-form.model';
+import { AtcCode } from '../../core/models/atc-codes.model';
+import { TherapeuticClass } from '../../core/models/therapeutic-class.model';
+import { mapDataToSubmit, mapEditData } from '../../shared/utils/medication';
 
 @Component({
   selector: 'app-medication',
@@ -31,13 +41,19 @@ import { Select } from 'primeng/select';
     ReactiveFormsModule,
     Select,
   ],
-  providers: [MedicationService],
+  providers: [
+    MedicationService,
+    ActiveIngredientService,
+    PharmaceuticalFormService,
+    AtcCodeService,
+    TherapeuticClassService,
+  ],
 })
 export class MedicationComponent implements OnInit {
   medications: Medication[] = [];
   visible: boolean = false;
   formGroup!: FormGroup;
-  visibled = false;
+  itemToUpdate: Medication | null = null;
 
   headers: string[] = [
     'Name',
@@ -123,26 +139,14 @@ export class MedicationComponent implements OnInit {
       header: 'Pharmaceutical Form',
       type: 'select',
       placeholder: 'Select Pharmaceutical Form',
-      options: [
-        { name: 'Tablet', code: 'Tablet' },
-        { name: 'Capsule', code: 'Capsule' },
-        { name: 'Injection', code: 'Injection' },
-        { name: 'Syrup', code: 'Syrup' },
-        { name: 'Cream', code: 'Cream' },
-      ],
+      options: [] as PharmaceuticalForm[],
     },
     {
       field: 'atcCodeName',
       header: 'ATC Code',
       type: 'select',
       placeholder: 'Select ATC Code',
-      options: [
-        { name: 'A', code: 'A' },
-        { name: 'B', code: 'B' },
-        { name: 'C', code: 'C' },
-        { name: 'D', code: 'D' },
-        { name: 'E', code: 'E' },
-      ],
+      options: [] as AtcCode[],
     },
     {
       field: 'therapeuticClassName',
@@ -150,13 +154,7 @@ export class MedicationComponent implements OnInit {
       type: 'select',
       placeholder: 'Select Therapeutic Class',
 
-      options: [
-        { name: 'A', code: 'A' },
-        { name: 'B', code: 'B' },
-        { name: 'C', code: 'C' },
-        { name: 'D', code: 'D' },
-        { name: 'E', code: 'E' },
-      ],
+      options: [] as TherapeuticClass[],
     },
     {
       field: 'classificationName',
@@ -164,11 +162,8 @@ export class MedicationComponent implements OnInit {
       type: 'select',
       placeholder: 'Select Classification',
       options: [
-        { name: 'A', code: 'A' },
-        { name: 'B', code: 'B' },
-        { name: 'C', code: 'C' },
-        { name: 'D', code: 'D' },
-        { name: 'E', code: 'E' },
+        { name: 'POM', code: 'POM' },
+        { name: 'OTC', code: 'OTC' },
       ],
     },
     {
@@ -176,20 +171,18 @@ export class MedicationComponent implements OnInit {
       header: 'Active Ingredients',
       type: 'multiselect',
       placeholder: 'Select Active Ingredients',
-      options: [
-        { name: 'New York', id: 'NY', dosage: '' },
-        { name: 'Rome', id: 'RM', dosage: '' },
-        { name: 'London', id: 'LDN', dosage: '' },
-        { name: 'Istanbul', id: 'IST', dosage: '' },
-        { name: 'Paris', id: 'PRS', dosage: '' },
-      ],
+      options: [] as ActiveIngredient[],
     },
   ];
 
   constructor(
     private primengConfig: PrimeNG,
     private medicationService: MedicationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private activeIngredientService: ActiveIngredientService,
+    private pharmaceuticalFormService: PharmaceuticalFormService,
+    private atcCodeService: AtcCodeService,
+    private therapeuticClassService: TherapeuticClassService
   ) {}
 
   ngOnInit(): void {
@@ -208,9 +201,51 @@ export class MedicationComponent implements OnInit {
       // activeIngredients: [[], Validators.required],
       activeIngredients: this.fb.array([]), // Define as a FormArray for multiselect
     });
-
-    this.medicationService.getMedications().subscribe((data: Medication[]) => {
-      this.medications = data;
+    this.loading = true;
+    forkJoin({
+      medications: this.medicationService.getMedications(),
+      activeIngredients: this.activeIngredientService.getActiveIngredients(),
+      pharmaceuticalForms:
+        this.pharmaceuticalFormService.getPharmaceuticalForms(),
+      atcCodes: this.atcCodeService.getAtcCodes(),
+      therapeuticClasses: this.therapeuticClassService.getTherapeuticClasss(),
+    }).subscribe({
+      next: ({
+        medications,
+        activeIngredients,
+        pharmaceuticalForms,
+        atcCodes,
+        therapeuticClasses,
+      }) => {
+        this.medications = medications;
+        this.fields.find(
+          (field) => field.field === 'activeIngredients'
+        )!.options = activeIngredients;
+        this.fields.find(
+          (field) => field.field === 'pharmaceuticalFormName'
+        )!.options = pharmaceuticalForms.map((pharmaceuticalForm) => {
+          return {
+            id: pharmaceuticalForm.id,
+            name: pharmaceuticalForm.form,
+          };
+        });
+        this.fields.find((field) => field.field === 'atcCodeName')!.options =
+          atcCodes?.map((atcCode) => {
+            return {
+              id: atcCode.id,
+              name: atcCode.code,
+              code: atcCode.code,
+            };
+          });
+        this.fields.find(
+          (field) => field.field === 'therapeuticClassName'
+        )!.options = therapeuticClasses;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching data', error);
+        this.loading = false;
+      },
     });
   }
 
@@ -222,7 +257,7 @@ export class MedicationComponent implements OnInit {
     const ingredientGroup = this.fb.group({
       name: [ingredient.name, Validators.required],
       id: [ingredient.id, Validators.required],
-      dosage: ['', Validators.required], // Add dosage control here
+      dosage: ['', Validators.required],
     });
     this.activeIngredients.push(ingredientGroup);
   }
@@ -241,30 +276,65 @@ export class MedicationComponent implements OnInit {
   }
 
   showDialog = () => {
-    this.visibled = true;
+    this.visible = true;
+  };
+
+  hideDialog = () => {
+    this.formGroup.reset();
+    this.itemToUpdate = null;
+    this.visible = false;
   };
 
   editMedication = (data: Medication) => {
     const originalData = this.medications.find((m) => m.id === data.id);
 
-    data.activeIngredients =
-      originalData?.activeIngredients.map((ingredient) => {
-        return {
-          name: ingredient.name,
-          id: ingredient.id,
-          dosage: ingredient.dosage,
-        };
-      }) || [];
-    this.formGroup.patchValue(data);
-    this.visibled = true;
+    data.activeIngredients = originalData?.activeIngredients || [];
+    this.formGroup.patchValue(mapEditData(data));
+    this.activeIngredients.patchValue(data.activeIngredients);
+    this.visible = true;
+  };
+
+  refetchMedications = () => {
+    this.medicationService.getMedications().subscribe((data: Medication[]) => {
+      this.medications = data;
+    });
   };
 
   onSubmit(): void {
-    console.log(this.formGroup.value);
     if (this.formGroup.valid) {
-      // Handle form submission
-      console.log(this.formGroup.value);
+      if (this.itemToUpdate) {
+        this.updateMedication(
+          this.itemToUpdate.id,
+          mapDataToSubmit(this.formGroup.value)
+        );
+      } else {
+        this.addMedication(mapDataToSubmit(this.formGroup.value));
+        this.medicationService
+          .getMedications()
+          .subscribe((data: Medication[]) => {
+            this.medications = data;
+          });
+      }
+
+      this.refetchMedications();
     }
+  }
+
+  addMedication(data: Medication): void {
+    this.medicationService.addMedication(data).subscribe((medication) => {
+      this.medications = [...this.medications, medication];
+      this.visible = false;
+    });
+  }
+
+  updateMedication(id: number, data: Medication): void {
+    this.medicationService
+      .updateMedication(id, data)
+      .subscribe((medication) => {
+        const index = this.medications.findIndex((m) => m.id === id);
+        this.medications[index] = medication;
+        this.visible = false;
+      });
   }
 
   getMedicationData() {

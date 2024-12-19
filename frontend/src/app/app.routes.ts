@@ -15,4 +15,26 @@ export const routes: Routes = [
         (m) => m.TherapeuticClassComponent
       ),
   },
+
+  {
+    path: 'active-ingredients',
+    loadComponent: () =>
+      import('./features/activeIngredients/active-ingredients.component').then(
+        (m) => m.ActiveIngredientsComponent
+      ),
+  },
+  {
+    path: 'pharmaceutical-forms',
+    loadComponent: () =>
+      import(
+        './features/pharmaceuticalForms/pharmaceutical-forms.component'
+      ).then((m) => m.PharmaceuticalFormsComponent),
+  },
+  {
+    path: 'atc-codes',
+    loadComponent: () =>
+      import('./features/atcCodes/atc-codes.component').then(
+        (m) => m.AtcCodesComponent
+      ),
+  },
 ];

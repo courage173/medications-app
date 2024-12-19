@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.p-datatable-table-container {
+.p-datatable-table-container,
+.p-dialog-content {
   overflow: unset !important;
 }

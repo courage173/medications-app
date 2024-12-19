@@ -9,15 +9,13 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ActiveIngredientService {
-  private apiUrl = 'http://localhost:5283/api/ActiveIngredients';
+  private apiUrl = 'http://localhost:5283/api/activeIngredient';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getActiveIngredients(page = 1): Observable<ActiveIngredient[]> {
     return this.http
-      .get<ActiveIngredient[]>(
-        `${this.apiUrl}/page?pageNumber=${page}&pageSize=15`
-      )
+      .get<ActiveIngredient[]>(`${this.apiUrl}/?pageNumber=${page}&pageSize=15`)
       .pipe(
         tap(() => this.stateService.setLoading(false)),
         catchError((error) => {

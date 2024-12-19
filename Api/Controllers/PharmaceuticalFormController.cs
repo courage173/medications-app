@@ -37,7 +37,7 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return await _service.AddPharmaceuticalForm(item.Form);
+            return await _service.AddPharmaceuticalForm(item.Form!);
         }
 
         [HttpPut("{id}")]
@@ -47,7 +47,7 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var pharmaceuticalForm = _service.GetPharmaceuticalForm(id);
+            var pharmaceuticalForm = await _service.GetPharmaceuticalForm(id);
 
             if (pharmaceuticalForm == null)
             {

@@ -9,14 +9,14 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class PharmaceuticalFormService {
-  private apiUrl = 'http://localhost:5283/api/pharmaceuticalForms';
+  private apiUrl = 'http://localhost:5283/api/pharmaceuticalForm';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getPharmaceuticalForms(page = 1): Observable<PharmaceuticalForm[]> {
     return this.http
       .get<PharmaceuticalForm[]>(
-        `${this.apiUrl}/page?pageNumber=${page}&pageSize=15`
+        `${this.apiUrl}?pageNumber=${page}&pageSize=15`
       )
       .pipe(
         tap(() => this.stateService.setLoading(false)),

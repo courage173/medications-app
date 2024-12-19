@@ -14,10 +14,11 @@
   <p-dialog
     header="Add Medication"
     [modal]="true"
-    [(visible)]="visibled"
+    [(visible)]="visible"
     [style]="{ width: '50rem' }"
+    (onHide)="hideDialog()"
   >
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="pb-10">
       <div class="flex gap-4 mb-4 flex-col" *ngFor="let field of fields">
         <label [for]="field.field" class="font-semibold">{{
           field.header
@@ -75,11 +76,7 @@
       </div>
 
       <div class="flex justify-end gap-2">
-        <p-button
-          label="Cancel"
-          severity="secondary"
-          (click)="visible = false"
-        />
+        <p-button label="Cancel" severity="secondary" (click)="hideDialog()" />
         <p-button label="Save" type="submit" />
       </div>
     </form>

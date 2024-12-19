@@ -46,17 +46,15 @@ export class MedicationService {
     );
   }
 
-  updateMedication(medication: Medication): Observable<Medication> {
-    return this.http
-      .put<Medication>(`${this.apiUrl}/${medication.id}`, medication)
-      .pipe(
-        tap(() => this.stateService.setLoading(false)),
-        catchError((error) => {
-          this.stateService.setLoading(false);
-          this.stateService.setError(error.message);
-          return throwError(() => new Error(error.message));
-        })
-      );
+  updateMedication(id: number, medication: Medication): Observable<Medication> {
+    return this.http.put<Medication>(`${this.apiUrl}/${id}`, medication).pipe(
+      tap(() => this.stateService.setLoading(false)),
+      catchError((error) => {
+        this.stateService.setLoading(false);
+        this.stateService.setError(error.message);
+        return throwError(() => new Error(error.message));
+      })
+    );
   }
 
   deleteMedication(id: number): Observable<Medication> {
