@@ -37,7 +37,7 @@ namespace Api.Controllers
         public async Task<ActionResult<ATCCodeDto>> Create(CreateUpdateATCCodeDto item)
         {
             Console.WriteLine("Creating ATCCode with code: " + item);
-            return await _service.AddATCCodeAsync(item.code);
+            return await _service.AddATCCodeAsync(item.Code);
         }
 
         [HttpPut("{id}")]
@@ -51,7 +51,7 @@ namespace Api.Controllers
                 return NotFound();
             }
 
-            await _service.UpdateATCCodeAsync(id, item.code);
+            await _service.UpdateATCCodeAsync(id, item.Code);
             return NoContent();
         }
 

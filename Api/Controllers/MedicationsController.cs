@@ -25,8 +25,10 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUpdateMedicationRecordDto medication)
         {
+            Console.WriteLine("Creating medication");
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("Model state is invalid");
                 return BadRequest(ModelState);
             }
             await _service.AddMedication(medication);

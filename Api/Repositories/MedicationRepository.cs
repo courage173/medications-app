@@ -18,7 +18,6 @@ namespace Api.Repositories
                 .Include(m => m.PharmaceuticalForm)
                 .Include(m => m.ATCCodes)
                 .Include(m => m.TherapeuticClass)
-                .Include(m => m.Classification)
                 .Include(m => m.MedicationActiveIngredients)
                 .ThenInclude(mai => mai.ActiveIngredient)
                 .Skip((pageNumber - 1) * pageSize)

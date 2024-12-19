@@ -9,10 +9,10 @@ namespace Api.DTOs
         public string? CompetentAuthorityStatus { get; set; }
         public string? InternalStatus { get; set; }
         public string? Unit { get; set; }
+        public string? Classification { get; set; }
         public int PharmaceuticalFormId { get; set; }
         public int ATCCodeId { get; set; }
         public int TherapeuticClassId { get; set; }
-        public int ClassificationId { get; set; }
 
 
         public static MedicationRecordDTO FromMedication(Api.Models.Medication medication)
@@ -24,10 +24,11 @@ namespace Api.DTOs
                 CompetentAuthorityStatus = medication.CompetentAuthorityStatus,
                 InternalStatus = medication.InternalStatus,
                 Unit = medication.Unit,
+                Classification = medication.Classification,
                 PharmaceuticalFormId = medication.PharmaceuticalFormId,
                 ATCCodeId = medication.ATCCodeId,
                 TherapeuticClassId = medication.TherapeuticClassId,
-                ClassificationId = medication.ClassificationId
+
             };
         }
 

@@ -7,6 +7,6 @@ namespace Api.DTOs
 {
     public record CreateUpdateATCCodeDto
     {
-        public required string code { get; set; }
+        public required string Code { get; set; }
     }
 }

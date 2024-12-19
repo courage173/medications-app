@@ -27,14 +27,13 @@ namespace Api.DTOs
                 CompetentAuthorityStatus = medication.CompetentAuthorityStatus,
                 InternalStatus = medication.InternalStatus,
                 Unit = medication.Unit,
+                ClassificationName = medication.Classification,
                 PharmaceuticalFormId = medication.PharmaceuticalFormId,
                 PharmaceuticalFormName = medication.PharmaceuticalForm?.Form,
                 ATCCodeId = medication.ATCCodeId,
                 ATCCodeName = medication.ATCCodes?.Code,
                 TherapeuticClassId = medication.TherapeuticClassId,
                 TherapeuticClassName = medication.TherapeuticClass?.Name,
-                ClassificationId = medication.ClassificationId,
-                ClassificationName = medication.Classification?.Name,
                 ActiveIngredients = medication.MedicationActiveIngredients?
                     .Select(mai => ActiveIngredientDTO.FromMedicationActiveIngredient(mai))
                     .ToList() ?? new List<ActiveIngredientDTO>()
