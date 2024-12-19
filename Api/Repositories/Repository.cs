@@ -17,7 +17,13 @@ namespace Api.Repositories
             _context = context;
         }
 
-        public async Task<List<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+        public async Task<List<T>> GetAllAsync(int pageNumber = 1, int pageSize = 15)
+        {
+            return await _context.Set<T>()
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        }
 
         public async Task<T?> GetByIdAsync(int id) => await _context.Set<T>().FindAsync(id)!;
 

@@ -16,5 +16,13 @@ namespace Api.DTOs
         public int TherapeuticClassId { get; set; }
         public int ClassificationId { get; set; }
 
+        public List<MedicationActiveIngredientDto> ActiveIngredients { get; set; } = new();
+
+    }
+
+    public class MedicationActiveIngredientDto
+    {
+        public int ActiveIngredientId { get; set; }
+        public string? dosage { get; set; }
     }
 }

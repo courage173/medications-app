@@ -19,7 +19,7 @@ namespace Api.DTOs
                 Id = medicationActiveIngredients.Id,
                 MedicationId = medicationActiveIngredients.MedicationId,
                 ActiveIngredientId = medicationActiveIngredients.ActiveIngredientId,
-                dosage = medicationActiveIngredients.dosage
+                dosage = medicationActiveIngredients.Dosage
             };
         }
     }

@@ -7,7 +7,7 @@ namespace Api.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(int pageNumber, int pageSize);
         Task<T?> GetByIdAsync(int id);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);

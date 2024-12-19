@@ -3,17 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Models
 {
-    [Index(nameof(Name), IsUnique = true)]
     public class ATCCodes
     {
         public int Id { get; private set; }
-        public string Name { get; private set; }
+        public string Code { get; private set; }
 
         private ATCCodes() { }
 
-        public ATCCodes(string name)
+        public ATCCodes(string code)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Code = code ?? throw new ArgumentNullException(nameof(code));
         }
     }
 }

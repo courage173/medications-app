@@ -14,9 +14,9 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<MedicationActiveIngredientsResponseDto>> GetAllMedicationActiveIngredients()
+        public async Task<IEnumerable<MedicationActiveIngredientsResponseDto>> GetAllMedicationActiveIngredients(int pageNumber, int pageSize)
         {
-            var result = await _repository.GetAllAsync();
+            var result = await _repository.GetAllAsync(pageNumber, pageSize);
             return result.Select(MedicationActiveIngredientsResponseDto.FromMedicationActiveIngredients);
         }
 
@@ -43,6 +43,8 @@ namespace Api.Services
                 await _repository.UpdateAsync(item);
             }
         }
+
+        public async Task DeleteByMedicationId(int medicationId) => await _repository.DeleteByMedicationId(medicationId);
 
         public async Task DeleteMedicationActiveIngredient(int id) => await _repository.DeleteAsync(id);
     }

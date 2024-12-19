@@ -11,5 +11,12 @@ namespace Api.Repositories
         public MedicationActiveIngredientsRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+        public async Task DeleteByMedicationId(int medicationId)
+        {
+            var items = _context.MedicationActiveIngredients.Where(m => m.MedicationId == medicationId);
+            _context.MedicationActiveIngredients.RemoveRange(items);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -16,9 +16,9 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public async Task<List<ClassificationDto>> GetAllClassificationsAsync()
+        public async Task<List<ClassificationDto>> GetAllClassificationsAsync(int pageNumber, int pageSize)
         {
-            var classifications = await _repository.GetAllAsync();
+            var classifications = await _repository.GetAllAsync(pageNumber, pageSize);
             return classifications.Select(ClassificationDto.FromClassification).ToList();
         }
 

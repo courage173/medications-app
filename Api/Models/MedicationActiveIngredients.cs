@@ -12,7 +12,7 @@ namespace Api.Models
         public int MedicationId { get; private set; }
         public int ActiveIngredientId { get; private set; }
 
-        public string dosage { get; private set; }
+        public string Dosage { get; private set; }
 
         public virtual Medication Medication { get; private set; }
         public virtual ActiveIngredient ActiveIngredient { get; private set; }
@@ -23,7 +23,7 @@ namespace Api.Models
         {
             MedicationId = data.MedicationId;
             ActiveIngredientId = data.ActiveIngredientId;
-            this.dosage = dosage ?? throw new ArgumentNullException(nameof(dosage));
+            Dosage = data.dosage ?? throw new ArgumentNullException(nameof(data.dosage));
         }
     }
 }

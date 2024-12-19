@@ -8,29 +8,42 @@ namespace Api.Services
     public class MedicationService
     {
         private readonly IMedicationRepository _medicationRepository;
+        private readonly MedicationActiveIngredientsService _activeIngredientService;
 
-        public MedicationService(IMedicationRepository repository)
+        public MedicationService(IMedicationRepository repository, MedicationActiveIngredientsService activeIngredientService)
         {
             _medicationRepository = repository;
+            _activeIngredientService = activeIngredientService;
 
         }
 
-        public async Task<IEnumerable<MedicationRecordDTO>> GetAllMedications()
+        public async Task<IEnumerable<MedicationListResponseDto>> GetAllMedications(int pageNumber, int pageSize)
         {
-            var result = await _medicationRepository.GetAllAsync();
-            return result.Select(MedicationRecordDTO.FromMedication);
+            var result = await _medicationRepository.GetMedicationsAsync(pageNumber, pageSize);
+            return result.Select(MedicationListResponseDto.FromMedication);
         }
 
         public async Task<MedicationRecordDTO> GetMedication(int id)
         {
-            var result = await _medicationRepository.GetByIdAsync(id);
+            var result = await _medicationRepository.GetMedicationByIdAsync(id);
             return MedicationRecordDTO.FromMedication(result!);
         }
 
         public async Task AddMedication(CreateUpdateMedicationRecordDto medicationDto)
         {
             var newMedication = new Medication(medicationDto);
-            await _medicationRepository.AddAsync(newMedication);
+            var result = await _medicationRepository.AddAsync(newMedication);
+
+            foreach (var activeIngredient in medicationDto.ActiveIngredients)
+            {
+                var medicationActiveIngredient = new CreateUpdateMedicationActiveIngredientsDto
+                {
+                    ActiveIngredientId = activeIngredient.ActiveIngredientId,
+                    dosage = activeIngredient.dosage,
+                    MedicationId = result.Id
+                };
+                await _activeIngredientService.AddMedicationActiveIngredient(medicationActiveIngredient);
+            }
         }
 
         public async Task UpdateMedication(int id, CreateUpdateMedicationRecordDto updateMedication)
@@ -40,6 +53,21 @@ namespace Api.Services
             {
                 medication.UpdateMedication(updateMedication);
                 await _medicationRepository.UpdateAsync(medication);
+
+                // Delete existing active ingredients
+                await _activeIngredientService.DeleteByMedicationId(medication.Id);
+
+                // Recreate active ingredients
+                foreach (var activeIngredient in updateMedication.ActiveIngredients)
+                {
+                    var medicationActiveIngredient = new CreateUpdateMedicationActiveIngredientsDto
+                    {
+                        ActiveIngredientId = activeIngredient.ActiveIngredientId,
+                        dosage = activeIngredient.dosage,
+                        MedicationId = medication.Id
+                    };
+                    await _activeIngredientService.AddMedicationActiveIngredient(medicationActiveIngredient);
+                }
             }
         }
 

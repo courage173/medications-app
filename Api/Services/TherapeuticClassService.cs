@@ -14,9 +14,9 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<TherapeuticClassDto>> GetAllTherapeuticClasses()
+        public async Task<IEnumerable<TherapeuticClassDto>> GetAllTherapeuticClasses(int pageNumber, int pageSize)
         {
-            var therapeuticClasses = await _repository.GetAllAsync();
+            var therapeuticClasses = await _repository.GetAllAsync(pageNumber, pageSize);
             return therapeuticClasses.Select(TherapeuticClassDto.FromTherapeuticClass);
         }
 

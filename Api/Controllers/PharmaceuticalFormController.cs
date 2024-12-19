@@ -17,7 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAll() => await _service.GetAllPharmaceuticalForms();
+        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15) => await _service.GetAllPharmaceuticalForms(pageNumber, pageSize);
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PharmaceuticalFormDto>> GetById(int id)

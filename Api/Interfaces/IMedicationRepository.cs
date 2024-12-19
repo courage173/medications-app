@@ -9,6 +9,8 @@ namespace Api.Interfaces
 {
     public interface IMedicationRepository : IRepository<Medication>
     {
+        Task<IEnumerable<Medication>> GetMedicationsAsync(int pageNumber, int pageSize);
+        Task<Medication?> GetMedicationByIdAsync(int id);
         IEnumerable<Medication> GetMedicationsByTherapeuticClass(int therapeuticClassId);
     }
 }

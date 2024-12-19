@@ -34,12 +34,16 @@ builder.Services.AddScoped<IClassificationRepository, ClassificationRepository>(
 builder.Services.AddScoped<IMedicationActiveIngredientsRepository, MedicationActiveIngredientsRepository>();
 builder.Services.AddScoped<IPharmaceuticalFormRepository, PharmaceuticalFormRepository>();
 builder.Services.AddScoped<ITherapeuticClassRepository, TherapeuticClassRepository>();
+builder.Services.AddScoped<IATCCodepository, ATCCodepository>();
+builder.Services.AddScoped<IActiveIngredientRepository, ActiveIngredientRepository>();
 
 builder.Services.AddScoped<MedicationService>();
 builder.Services.AddScoped<ClassificationService>();
 builder.Services.AddScoped<MedicationActiveIngredientsService>();
 builder.Services.AddScoped<PharmaceuticalFormService>();
 builder.Services.AddScoped<TherapeuticClassService>();
+builder.Services.AddScoped<ATCCodeService>();
+builder.Services.AddScoped<ActiveIngredientService>();
 
 
 var app = builder.Build();

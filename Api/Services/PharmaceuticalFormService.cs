@@ -14,9 +14,9 @@ namespace Api.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAllPharmaceuticalForms()
+        public async Task<IEnumerable<PharmaceuticalFormDto>> GetAllPharmaceuticalForms(int pageNumber, int pageSize)
         {
-            var pharmaceuticalForms = await _repository.GetAllAsync();
+            var pharmaceuticalForms = await _repository.GetAllAsync(pageNumber, pageSize);
             return pharmaceuticalForms.Select(PharmaceuticalFormDto.FromPharmaceuticalForm);
         }
 

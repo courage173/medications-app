@@ -17,7 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ClassificationDto>> GetAll() => await _service.GetAllClassificationsAsync();
+        public async Task<IEnumerable<ClassificationDto>> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15) => await _service.GetAllClassificationsAsync(pageNumber, pageSize);
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ClassificationDto>> GetById(int id)
