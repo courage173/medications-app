@@ -62,6 +62,7 @@ export class MedicationComponent implements OnInit {
   itemToUpdate: Medication | null = null;
   itemsPerPage: number = 10;
   loading: boolean = false;
+  filterObj: TableLazyLoadEvent | null = null;
 
   headers: string[] = [
     'Name',
@@ -305,30 +306,24 @@ export class MedicationComponent implements OnInit {
   };
 
   refetchMedications = () => {
-    this.medicationService
-      .getMedications({
-        pageNumber: this.medicationData.currentPage,
-        itemsPerPage: this.itemsPerPage,
-      })
-      .subscribe((data: MedicationData) => {
-        this.medicationData = data;
-      });
-  };
-
-  onLazyLoad = (event: TableLazyLoadEvent) => {
-    console.log('event', event);
     this.loading = true;
     this.medicationService
       .getMedications({
-        pageNumber: event.first! / this.itemsPerPage + 1,
+        pageNumber: this.filterObj?.first! / this.itemsPerPage + 1,
         itemsPerPage: this.itemsPerPage,
-        ascending: event.sortOrder === 1,
-        searchValue: (event.globalFilter as string) || '',
+        ascending: this.filterObj?.sortOrder === 1,
+        searchValue: (this.filterObj?.globalFilter as string) || '',
+        sortBy: 'name',
       })
       .subscribe((data: MedicationData) => {
         this.medicationData = data;
         this.loading = false;
       });
+  };
+
+  onLazyLoad = (event: TableLazyLoadEvent) => {
+    this.filterObj = event;
+    this.refetchMedications();
   };
 
   onSubmit(): void {
@@ -348,12 +343,8 @@ export class MedicationComponent implements OnInit {
 
   onDelete = (data: Medication) => {
     this.medicationService.deleteMedication(data.id).subscribe(() => {
-      this.medicationData.medications = this.medicationData.medications.filter(
-        (medication) => medication.id !== data.id
-      );
+      this.refetchMedications();
     });
-
-    this.refetchMedications();
   };
 
   addMedication(data: Medication): void {
