@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "postinstall": "./fix-primeng.sh",
+    "postinstall": "chmod +x ./fix-primeng.sh && ./fix-primeng.sh",
     "test": "ng test"
   },
   "private": true,
