@@ -24,3 +24,9 @@ export interface Medication {
   classificationName: Classification;
   activeIngredients: ActiveIngredient[];
 }
+
+export interface MedicationData {
+  medications: Medication[];
+  total: number;
+  currentPage: number;
+}

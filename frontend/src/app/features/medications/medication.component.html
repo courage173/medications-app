@@ -3,6 +3,8 @@
 
   <app-table
     [data]="getMedicationData()"
+    [totalRecords]="medicationData.total"
+    [itemsPerPage]="itemsPerPage"
     [loading]="loading"
     [title]="'Medications List'"
     [headers]="headers"
@@ -10,6 +12,8 @@
     [addNew]="showDialog"
     [edit]="editMedication"
     [delete]="onDelete"
+    [lazy]="true"
+    [onLazyLoad]="onLazyLoad"
   />
 
   <p-dialog

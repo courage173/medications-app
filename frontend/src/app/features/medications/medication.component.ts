@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PrimeNG } from 'primeng/config';
 import { TableComponent } from '../../shared/table/table.component';
 import { MedicationService } from '../../core/services/medication-service';
-import { Medication } from '../../core/models/medication.model';
+import { Medication, MedicationData } from '../../core/models/medication.model';
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -26,6 +26,8 @@ import { PharmaceuticalForm } from '../../core/models/pharmaceutical-form.model'
 import { AtcCode } from '../../core/models/atc-codes.model';
 import { TherapeuticClass } from '../../core/models/therapeutic-class.model';
 import { mapDataToSubmit, mapEditData } from '../../shared/utils/medication';
+import { StateService } from '../../core/services/state.service';
+import { TableLazyLoadEvent } from 'primeng/table';
 
 @Component({
   selector: 'app-medication',
@@ -35,7 +37,6 @@ import { mapDataToSubmit, mapEditData } from '../../shared/utils/medication';
     TableComponent,
     Dialog,
     ButtonModule,
-
     MultiSelectModule,
     FormsModule,
     ReactiveFormsModule,
@@ -47,13 +48,20 @@ import { mapDataToSubmit, mapEditData } from '../../shared/utils/medication';
     PharmaceuticalFormService,
     AtcCodeService,
     TherapeuticClassService,
+    StateService,
   ],
 })
 export class MedicationComponent implements OnInit {
-  medications: Medication[] = [];
+  medicationData: MedicationData = {
+    medications: [],
+    total: 0,
+    currentPage: 1,
+  };
   visible: boolean = false;
   formGroup!: FormGroup;
   itemToUpdate: Medication | null = null;
+  itemsPerPage: number = 10;
+  loading: boolean = false;
 
   headers: string[] = [
     'Name',
@@ -96,8 +104,6 @@ export class MedicationComponent implements OnInit {
       field: 'activeIngredients',
     },
   ];
-
-  loading: boolean = false;
 
   fields = [
     {
@@ -182,7 +188,8 @@ export class MedicationComponent implements OnInit {
     private activeIngredientService: ActiveIngredientService,
     private pharmaceuticalFormService: PharmaceuticalFormService,
     private atcCodeService: AtcCodeService,
-    private therapeuticClassService: TherapeuticClassService
+    private therapeuticClassService: TherapeuticClassService,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
@@ -203,7 +210,9 @@ export class MedicationComponent implements OnInit {
     });
     this.loading = true;
     forkJoin({
-      medications: this.medicationService.getMedications(),
+      medicationData: this.medicationService.getMedications({
+        pageNumber: 1,
+      }),
       activeIngredients: this.activeIngredientService.getActiveIngredients(),
       pharmaceuticalForms:
         this.pharmaceuticalFormService.getPharmaceuticalForms(),
@@ -211,13 +220,14 @@ export class MedicationComponent implements OnInit {
       therapeuticClasses: this.therapeuticClassService.getTherapeuticClasss(),
     }).subscribe({
       next: ({
-        medications,
+        medicationData,
         activeIngredients,
         pharmaceuticalForms,
         atcCodes,
         therapeuticClasses,
       }) => {
-        this.medications = medications;
+        this.loading = false;
+        this.medicationData = medicationData;
         this.fields.find(
           (field) => field.field === 'activeIngredients'
         )!.options = activeIngredients;
@@ -240,11 +250,9 @@ export class MedicationComponent implements OnInit {
         this.fields.find(
           (field) => field.field === 'therapeuticClassName'
         )!.options = therapeuticClasses;
-        this.loading = false;
       },
       error: (error) => {
         console.error('Error fetching data', error);
-        this.loading = false;
       },
     });
   }
@@ -286,7 +294,9 @@ export class MedicationComponent implements OnInit {
   };
 
   editMedication = (data: Medication) => {
-    const originalData = this.medications.find((m) => m.id === data.id);
+    const originalData = this.medicationData.medications.find(
+      (m) => m.id === data.id
+    );
 
     data.activeIngredients = originalData?.activeIngredients || [];
     this.formGroup.patchValue(mapEditData(data));
@@ -295,9 +305,30 @@ export class MedicationComponent implements OnInit {
   };
 
   refetchMedications = () => {
-    this.medicationService.getMedications().subscribe((data: Medication[]) => {
-      this.medications = data;
-    });
+    this.medicationService
+      .getMedications({
+        pageNumber: this.medicationData.currentPage,
+        itemsPerPage: this.itemsPerPage,
+      })
+      .subscribe((data: MedicationData) => {
+        this.medicationData = data;
+      });
+  };
+
+  onLazyLoad = (event: TableLazyLoadEvent) => {
+    console.log('event', event);
+    this.loading = true;
+    this.medicationService
+      .getMedications({
+        pageNumber: event.first! / this.itemsPerPage + 1,
+        itemsPerPage: this.itemsPerPage,
+        ascending: event.sortOrder === 1,
+        searchValue: (event.globalFilter as string) || '',
+      })
+      .subscribe((data: MedicationData) => {
+        this.medicationData = data;
+        this.loading = false;
+      });
   };
 
   onSubmit(): void {
@@ -309,11 +340,6 @@ export class MedicationComponent implements OnInit {
         );
       } else {
         this.addMedication(mapDataToSubmit(this.formGroup.value));
-        this.medicationService
-          .getMedications()
-          .subscribe((data: Medication[]) => {
-            this.medications = data;
-          });
       }
 
       this.refetchMedications();
@@ -322,7 +348,7 @@ export class MedicationComponent implements OnInit {
 
   onDelete = (data: Medication) => {
     this.medicationService.deleteMedication(data.id).subscribe(() => {
-      this.medications = this.medications.filter(
+      this.medicationData.medications = this.medicationData.medications.filter(
         (medication) => medication.id !== data.id
       );
     });
@@ -332,7 +358,10 @@ export class MedicationComponent implements OnInit {
 
   addMedication(data: Medication): void {
     this.medicationService.addMedication(data).subscribe((medication) => {
-      this.medications = [...this.medications, medication];
+      this.medicationData.medications = [
+        ...this.medicationData.medications,
+        medication,
+      ];
       this.visible = false;
     });
   }
@@ -341,14 +370,16 @@ export class MedicationComponent implements OnInit {
     this.medicationService
       .updateMedication(id, data)
       .subscribe((medication) => {
-        const index = this.medications.findIndex((m) => m.id === id);
-        this.medications[index] = medication;
+        const index = this.medicationData.medications.findIndex(
+          (m) => m.id === id
+        );
+        this.medicationData.medications[index] = medication;
         this.visible = false;
       });
   }
 
   getMedicationData() {
-    return this.medications.map((medication: Medication) => {
+    return this.medicationData.medications.map((medication: Medication) => {
       let activeIngredients = '';
       medication.activeIngredients.forEach((activeIngredient) => {
         if (activeIngredients !== '') {

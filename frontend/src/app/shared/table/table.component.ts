@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { PrimeNG } from 'primeng/config';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconField } from 'primeng/iconfield';
@@ -29,15 +29,26 @@ export class TableComponent {
   @Input() columns: { field: string }[] = [];
   @Input() data: any[] = [];
   @Input() loading: boolean = false;
-  @Input() totalRecords: number = 0;
+  @Input() totalRecords: number | null = null;
   @Input() itemsPerPage = 15;
+  @Input() lazy: boolean = false;
   @Input() title: string = '';
   @Input() addNew: () => void = () => {};
   @Input() edit: (data: any) => void = () => {};
   @Input() delete: (data: any) => void = () => {};
+  @Input() search: (event: any) => void = () => {};
+  @Input() onLazyLoad: (event: TableLazyLoadEvent) => void = () => {};
 
-  constructor(private primengConfig: PrimeNG) {}
+  @ViewChild('dt') dt: Table | undefined;
   @ViewChild('op') op!: Popover;
+
+  // hack to handle sortable column
+  sortableColumns = ['Name', 'Form', 'Code'];
+  constructor(private primengConfig: PrimeNG) {}
+
+  ngOnInit(): void {
+    this.primengConfig.ripple.set(true);
+  }
 
   handleAction(event: MouseEvent, item: any) {
     if (this.selectedItem?.id === item.id) {
@@ -46,11 +57,12 @@ export class TableComponent {
       this.selectedItem = item;
     }
   }
-  ngOnInit(): void {
-    this.primengConfig.ripple.set(true);
-  }
 
   onOutsideClick(): void {
     this.selectedItem = null;
+  }
+
+  applyFilterGlobal($event: any, stringVal: string) {
+    this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 }

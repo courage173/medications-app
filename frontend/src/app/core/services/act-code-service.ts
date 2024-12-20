@@ -4,18 +4,19 @@ import { Observable, throwError } from 'rxjs';
 import { AtcCode } from '../models/atc-codes.model';
 import { StateService } from './state.service';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AtcCodeService {
-  private apiUrl = 'http://localhost:5283/api/atcCodes?';
+  private apiUrl = environment.baseUrl + '/atcCodes';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getAtcCodes(page = 1): Observable<AtcCode[]> {
     return this.http
-      .get<AtcCode[]>(`${this.apiUrl}/pageNumber=${page}&pageSize=15`)
+      .get<AtcCode[]>(`${this.apiUrl}?pageNumber=${page}&pageSize=100`)
       .pipe(
         tap(() => this.stateService.setLoading(false)),
         catchError((error) => {

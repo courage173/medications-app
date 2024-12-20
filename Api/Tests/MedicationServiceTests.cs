@@ -27,13 +27,26 @@ namespace Api.Tests
         public async Task GetAllMedications_ReturnsAllMedications()
         {
             // Arrange
-            var medicationDto = new CreateUpdateMedicationRecordDto();
-            var medications = new List<Medication> { new Medication(medicationDto), new Medication(medicationDto) };
-            _medicationRepositoryMock.Setup(repo => repo.GetMedicationsAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(medications);
+            var medications = new List<Medication>
+    {
+        new Medication(new CreateUpdateMedicationRecordDto()),
+        new Medication(new CreateUpdateMedicationRecordDto())
+    };
 
-            var result = await _service.GetAllMedications(1, 10);
+            var expectedResponse = MedicationListResponseDto.FromMedications(medications, total: 2, currentPage: 1);
 
-            Assert.Equal(2, result.Count());
+            _medicationRepositoryMock
+                .Setup(repo => repo.GetMedicationsAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<bool>()))
+                .ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = await _service.GetAllMedications(1, 10, null, null, false);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Total);
+            Assert.Equal(1, result.CurrentPage);
+            Assert.Equal(2, result.Medications.Count);
         }
 
         [Fact]

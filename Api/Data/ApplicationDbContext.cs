@@ -21,6 +21,15 @@ namespace Api.Data
 
             // Configure relationships
             modelBuilder.Entity<Medication>()
+                .Property(m => m.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Medication>()
+                .Property(m => m.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
+
+            modelBuilder.Entity<Medication>()
                 .HasOne(m => m.PharmaceuticalForm)
                 .WithMany()
                 .HasForeignKey(m => m.PharmaceuticalFormId);

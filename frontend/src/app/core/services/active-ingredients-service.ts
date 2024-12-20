@@ -4,18 +4,22 @@ import { Observable, throwError } from 'rxjs';
 import { ActiveIngredient } from '../models/active-ingredients.model';
 import { StateService } from './state.service';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ActiveIngredientService {
-  private apiUrl = 'http://localhost:5283/api/activeIngredient';
+  private apiUrl = environment.baseUrl + '/activeIngredient';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getActiveIngredients(page = 1): Observable<ActiveIngredient[]> {
+    this.stateService.setLoading(true);
     return this.http
-      .get<ActiveIngredient[]>(`${this.apiUrl}/?pageNumber=${page}&pageSize=15`)
+      .get<ActiveIngredient[]>(
+        `${this.apiUrl}/?pageNumber=${page}&pageSize=100`
+      )
       .pipe(
         tap(() => this.stateService.setLoading(false)),
         catchError((error) => {

@@ -2,6 +2,25 @@ namespace Api.DTOs
 {
     public record MedicationListResponseDto
     {
+        public int Total { get; set; }
+        public int CurrentPage { get; set; }
+        public List<MedicationDto> Medications { get; set; } = new();
+
+
+        public static MedicationListResponseDto FromMedications(List<Api.Models.Medication> medications, int total, int currentPage)
+        {
+            return new MedicationListResponseDto
+            {
+                Total = total,
+                CurrentPage = currentPage,
+                Medications = medications.Select(MedicationDto.FromMedication).ToList()
+            };
+        }
+    }
+
+
+    public record MedicationDto
+    {
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? CompetentAuthorityStatus { get; set; }
@@ -15,11 +34,14 @@ namespace Api.DTOs
         public string? TherapeuticClassName { get; set; }
         public string? ClassificationName { get; set; }
 
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
+
         public List<ActiveIngredientDTO> ActiveIngredients { get; set; } = new();
 
-        public static MedicationListResponseDto FromMedication(Api.Models.Medication medication)
+        public static MedicationDto FromMedication(Api.Models.Medication medication)
         {
-            return new MedicationListResponseDto
+            return new MedicationDto
             {
                 Id = medication.Id,
                 Name = medication.Name,
@@ -39,6 +61,7 @@ namespace Api.DTOs
             };
         }
     }
+
 
     public record ActiveIngredientDTO
     {

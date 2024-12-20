@@ -17,7 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15) => Ok(await _service.GetAllMedications(pageNumber, pageSize));
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 15, [FromQuery] string? searchTerm = null, [FromQuery] string? sortBy = null, [FromQuery] bool ascending = true) => Ok(await _service.GetAllMedications(pageNumber, pageSize, searchTerm, sortBy, ascending));
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id) => Ok(await _service.GetMedication(id));

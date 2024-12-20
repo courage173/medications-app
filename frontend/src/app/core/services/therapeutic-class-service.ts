@@ -4,18 +4,21 @@ import { Observable, throwError } from 'rxjs';
 import { TherapeuticClass } from '../models/therapeutic-class.model';
 import { StateService } from './state.service';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TherapeuticClassService {
-  private apiUrl = 'http://localhost:5283/api/therapeuticClass';
+  private apiUrl = environment.baseUrl + '/therapeuticClass';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getTherapeuticClasss(page = 1): Observable<TherapeuticClass[]> {
     return this.http
-      .get<TherapeuticClass[]>(`${this.apiUrl}/?pageNumber=${page}&pageSize=15`)
+      .get<TherapeuticClass[]>(
+        `${this.apiUrl}/?pageNumber=${page}&pageSize=100`
+      )
       .pipe(
         tap(() => this.stateService.setLoading(false)),
         catchError((error) => {

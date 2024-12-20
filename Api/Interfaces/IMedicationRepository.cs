@@ -9,7 +9,7 @@ namespace Api.Interfaces
 {
     public interface IMedicationRepository : IRepository<Medication>
     {
-        Task<IEnumerable<Medication>> GetMedicationsAsync(int pageNumber, int pageSize);
+        Task<MedicationListResponseDto> GetMedicationsAsync(int pageNumber, int pageSize, string? searchTerm, string? sortBy, bool ascending);
         Task<Medication?> GetMedicationByIdAsync(int id);
         IEnumerable<Medication> GetMedicationsByTherapeuticClass(int therapeuticClassId);
     }

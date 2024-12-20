@@ -17,10 +17,10 @@ namespace Api.Services
 
         }
 
-        public async Task<IEnumerable<MedicationListResponseDto>> GetAllMedications(int pageNumber, int pageSize)
+        public async Task<MedicationListResponseDto> GetAllMedications(int pageNumber, int pageSize, string? searchTerm, string? sortBy, bool ascending)
         {
-            var result = await _medicationRepository.GetMedicationsAsync(pageNumber, pageSize);
-            return result.Select(MedicationListResponseDto.FromMedication);
+            var result = await _medicationRepository.GetMedicationsAsync(pageNumber, pageSize, searchTerm, sortBy, ascending);
+            return result;
         }
 
         public async Task<MedicationRecordDTO> GetMedication(int id)

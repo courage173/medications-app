@@ -1,12 +1,18 @@
 <p-table
+  #dt
   [value]="data"
   [rows]="itemsPerPage"
-  selectionMode="single"
+  [rowHover]="true"
   [showCurrentPageReport]="true"
   [loading]="loading"
+  [lazy]="lazy"
   [paginator]="true"
+  (onLazyLoad)="onLazyLoad($event)"
+  [totalRecords]="totalRecords || data.length"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-  [filterDelay]="0"
+  [filterDelay]="lazy ? 500 : 0"
+  [globalFilterFields]="['name']"
+  dataKey="id"
 >
   >
   <ng-template pTemplate="caption">
@@ -15,7 +21,13 @@
       <div class="flex items-center">
         <p-iconfield>
           <p-inputicon styleClass="pi pi-search" />
-          <input type="text" pInputText placeholder="Search" />
+          <input
+            type="text"
+            #textInput
+            pInputText
+            placeholder="Search"
+            (input)="applyFilterGlobal($event, 'contains')"
+          />
         </p-iconfield>
         <p-button
           icon="pi pi-plus"
@@ -29,7 +41,16 @@
 
   <ng-template pTemplate="header">
     <tr>
-      <th *ngFor="let header of headers">{{ header }}</th>
+      <th *ngFor="let header of headers">
+        <ng-container
+          *ngIf="sortableColumns.includes(header); else defaultHeader"
+        >
+          <th [pSortableColumn]="header">
+            {{ header }} <p-sortIcon field="name" />
+          </th>
+        </ng-container>
+        <ng-template #defaultHeader>{{ header }}</ng-template>
+      </th>
       <th style="text-align: center">Actions</th>
     </tr>
   </ng-template>

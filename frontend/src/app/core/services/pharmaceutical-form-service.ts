@@ -4,19 +4,20 @@ import { Observable, throwError } from 'rxjs';
 import { PharmaceuticalForm } from '../models/pharmaceutical-form.model';
 import { StateService } from './state.service';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PharmaceuticalFormService {
-  private apiUrl = 'http://localhost:5283/api/pharmaceuticalForm';
+  private apiUrl = environment.baseUrl + '/pharmaceuticalForm';
 
   constructor(private http: HttpClient, private stateService: StateService) {}
 
   getPharmaceuticalForms(page = 1): Observable<PharmaceuticalForm[]> {
     return this.http
       .get<PharmaceuticalForm[]>(
-        `${this.apiUrl}?pageNumber=${page}&pageSize=15`
+        `${this.apiUrl}?pageNumber=${page}&pageSize=100`
       )
       .pipe(
         tap(() => this.stateService.setLoading(false)),

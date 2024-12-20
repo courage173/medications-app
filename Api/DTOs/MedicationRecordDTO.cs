@@ -14,6 +14,9 @@ namespace Api.DTOs
         public int ATCCodeId { get; set; }
         public int TherapeuticClassId { get; set; }
 
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
+
 
         public static MedicationRecordDTO FromMedication(Api.Models.Medication medication)
         {

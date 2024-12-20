@@ -20,10 +20,15 @@ namespace Api.Models
 
         public int TherapeuticClassId { get; private set; }
         public TherapeuticClass TherapeuticClass { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
 
 
 
         public ICollection<MedicationActiveIngredients> MedicationActiveIngredients { get; private set; }
+
+        // Parameterless constructor for EF Core
+        public Medication() { }
 
         public Medication(CreateUpdateMedicationRecordDto medicationRecord)
         {
