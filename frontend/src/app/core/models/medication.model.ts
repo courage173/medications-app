@@ -23,6 +23,8 @@ export interface Medication {
   therapeuticClassName: string;
   classificationName: Classification;
   activeIngredients: ActiveIngredient[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface MedicationData {

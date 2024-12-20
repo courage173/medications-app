@@ -12,6 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { AtcCodeService } from '../../core/services/act-code-service';
 import { AtcCode } from '../../core/models/atc-codes.model';
 import { Dialog } from 'primeng/dialog';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-atc-codes',
@@ -23,8 +25,9 @@ import { Dialog } from 'primeng/dialog';
     FormsModule,
     ReactiveFormsModule,
     Dialog,
+    Toast,
   ],
-  providers: [AtcCodeService],
+  providers: [AtcCodeService, MessageService],
 })
 export class AtcCodesComponent implements OnInit {
   atcCodes: AtcCode[] = [];
@@ -43,7 +46,8 @@ export class AtcCodesComponent implements OnInit {
 
   constructor(
     private atcCodeService: AtcCodeService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -88,14 +92,31 @@ export class AtcCodesComponent implements OnInit {
     this.visible = false;
   };
 
+  showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message,
+    });
+  }
+
+  showSuccess(message: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: message,
+    });
+  }
+
   addATCCode = () => {
     this.atcCodeService.addAtcCode(this.formGroup.value.code).subscribe({
       next: (atcCode) => {
         this.atcCodes = [...this.atcCodes, atcCode];
         this.visible = false;
+        this.showSuccess('ATC code added successfully');
       },
       error: (error) => {
-        console.error(error);
+        this.showError(error.error || 'Error adding ATC code');
       },
     });
   };
@@ -106,9 +127,10 @@ export class AtcCodesComponent implements OnInit {
         this.atcCodes = this.atcCodes.filter(
           (atcCode) => atcCode.id !== data.id
         );
+        this.showSuccess('ATC code deleted successfully');
       },
       error: (error) => {
-        console.error(error);
+        this.showError(error.error || 'Error deleting ATC code');
       },
     });
   };
@@ -121,9 +143,10 @@ export class AtcCodesComponent implements OnInit {
         );
 
         this.visible = false;
+        this.showSuccess('ATC code updated successfully');
       },
       error: (error) => {
-        console.error(error);
+        this.showError(error.error || 'Error updating ATC code');
       },
     });
   };

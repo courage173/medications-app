@@ -28,6 +28,8 @@ import { TherapeuticClass } from '../../core/models/therapeutic-class.model';
 import { mapDataToSubmit, mapEditData } from '../../shared/utils/medication';
 import { StateService } from '../../core/services/state.service';
 import { TableLazyLoadEvent } from 'primeng/table';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-medication',
@@ -41,6 +43,7 @@ import { TableLazyLoadEvent } from 'primeng/table';
     FormsModule,
     ReactiveFormsModule,
     Select,
+    Toast,
   ],
   providers: [
     MedicationService,
@@ -49,6 +52,7 @@ import { TableLazyLoadEvent } from 'primeng/table';
     AtcCodeService,
     TherapeuticClassService,
     StateService,
+    MessageService,
   ],
 })
 export class MedicationComponent implements OnInit {
@@ -190,7 +194,8 @@ export class MedicationComponent implements OnInit {
     private pharmaceuticalFormService: PharmaceuticalFormService,
     private atcCodeService: AtcCodeService,
     private therapeuticClassService: TherapeuticClassService,
-    private stateService: StateService
+    private stateService: StateService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -294,6 +299,22 @@ export class MedicationComponent implements OnInit {
     this.visible = false;
   };
 
+  showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message,
+    });
+  }
+
+  showSuccess(message: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: message,
+    });
+  }
+
   editMedication = (data: Medication) => {
     const originalData = this.medicationData.medications.find(
       (m) => m.id === data.id
@@ -342,31 +363,47 @@ export class MedicationComponent implements OnInit {
   }
 
   onDelete = (data: Medication) => {
-    this.medicationService.deleteMedication(data.id).subscribe(() => {
-      this.refetchMedications();
+    this.medicationService.deleteMedication(data.id).subscribe({
+      next: () => {
+        this.refetchMedications();
+        this.showSuccess('Medication deleted successfully');
+      },
+      error: (error) => {
+        this.showError('Error deleting medication');
+      },
     });
   };
 
   addMedication(data: Medication): void {
-    this.medicationService.addMedication(data).subscribe((medication) => {
-      this.medicationData.medications = [
-        ...this.medicationData.medications,
-        medication,
-      ];
-      this.visible = false;
+    this.medicationService.addMedication(data).subscribe({
+      next: (medication) => {
+        this.medicationData.medications = [
+          ...this.medicationData.medications,
+          medication,
+        ];
+        this.visible = false;
+        this.showSuccess('Medication added successfully');
+      },
+      error: (error) => {
+        this.showError('Error adding medication');
+      },
     });
   }
 
   updateMedication(id: number, data: Medication): void {
-    this.medicationService
-      .updateMedication(id, data)
-      .subscribe((medication) => {
+    this.medicationService.updateMedication(id, data).subscribe({
+      next: (medication) => {
         const index = this.medicationData.medications.findIndex(
           (m) => m.id === id
         );
         this.medicationData.medications[index] = medication;
         this.visible = false;
-      });
+        this.showSuccess('Medication updated successfully');
+      },
+      error: (error) => {
+        this.showError('Error updating medication');
+      },
+    });
   }
 
   getMedicationData() {
